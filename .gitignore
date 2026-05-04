@@ -1,0 +1,23 @@
+# Root workspace
+/node_modules
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Build outputs
+dist
+build
+coverage
+
+# Logs and local runtime files
+*.log
+*.pid
+*.pid.lock
+backend-start.err.log
+backend-start.out.log
+
+# Editor and OS files
+.DS_Store
+.vscode/

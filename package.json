@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "workspaces": [
+    "frontend-escolar",
+    "backend"
+  ],
+  "scripts": {
+    "frontend:build": "npm --prefix frontend-escolar run build",
+    "frontend:lint": "npm --prefix frontend-escolar run lint",
+    "frontend:typecheck": "npm --prefix frontend-escolar exec tsc -- --noEmit --pretty false"
+  }
+}

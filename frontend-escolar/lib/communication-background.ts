@@ -1,0 +1,111 @@
+export const COMMUNICATION_BACKGROUND_STORAGE_PREFIX =
+  "gestclass_communication_background";
+
+export const communicationBackgroundOptions = [
+  {
+    id: "black",
+    label: "Preto",
+    color: "#020617",
+    pageClass: "bg-slate-950",
+    surfaceClass: "border-white/10 bg-white text-slate-950 shadow-sm",
+    softSurfaceClass: "border-white/10 bg-white/95 text-slate-950",
+    controlClass: "border-white/10 bg-white/95 text-slate-950",
+    chatPanelClass: "border-white/10 bg-zinc-950 text-zinc-100",
+    chatHeaderClass: "border-white/10 bg-zinc-900/95 text-white",
+    chatComposerClass: "border-white/10 bg-zinc-900/95 text-zinc-100",
+    chatInputClass:
+      "border-white/10 bg-zinc-800 text-zinc-100 placeholder:text-zinc-400",
+    chatMessagesClass: "bg-zinc-950 text-zinc-100",
+    otherBubbleClass: "rounded-bl-md bg-zinc-800 text-zinc-100",
+    floatingTextClass: "text-zinc-100",
+  },
+  {
+    id: "white",
+    label: "Branco",
+    color: "#ffffff",
+    pageClass: "bg-white",
+    surfaceClass: "border-slate-200 bg-white text-slate-950 shadow-sm",
+    softSurfaceClass: "border-slate-200 bg-slate-50 text-slate-950",
+    controlClass: "border-slate-200 bg-white text-slate-950",
+    chatPanelClass: "border-slate-200 bg-white text-slate-950",
+    chatHeaderClass: "border-slate-200 bg-white text-slate-950",
+    chatComposerClass: "border-slate-200 bg-white text-slate-950",
+    chatInputClass:
+      "border-slate-300 bg-slate-50 text-slate-950 placeholder:text-slate-500",
+    chatMessagesClass: "bg-white text-slate-950",
+    otherBubbleClass: "rounded-bl-md bg-slate-100 text-slate-950",
+    floatingTextClass: "text-slate-950",
+  },
+  {
+    id: "yellow",
+    label: "Amarelo claro",
+    color: "#fef9c3",
+    pageClass: "bg-yellow-50",
+    surfaceClass: "border-yellow-200 bg-white text-slate-950 shadow-sm",
+    softSurfaceClass: "border-yellow-200 bg-white/90 text-slate-950",
+    controlClass: "border-yellow-200 bg-white/90 text-slate-950",
+    chatPanelClass: "border-yellow-200 bg-yellow-50 text-slate-950",
+    chatHeaderClass: "border-yellow-200 bg-white/90 text-slate-950",
+    chatComposerClass: "border-yellow-200 bg-white/90 text-slate-950",
+    chatInputClass:
+      "border-yellow-300 bg-white text-slate-950 placeholder:text-slate-500",
+    chatMessagesClass: "bg-yellow-50 text-slate-950",
+    otherBubbleClass: "rounded-bl-md bg-white text-slate-950",
+    floatingTextClass: "text-slate-950",
+  },
+  {
+    id: "gray",
+    label: "Cinza claro",
+    color: "#e5e7eb",
+    pageClass: "bg-slate-200",
+    surfaceClass: "border-slate-300 bg-white text-slate-950 shadow-sm",
+    softSurfaceClass: "border-slate-300 bg-slate-50 text-slate-950",
+    controlClass: "border-slate-300 bg-white text-slate-950",
+    chatPanelClass: "border-slate-300 bg-slate-200 text-slate-950",
+    chatHeaderClass: "border-slate-300 bg-white text-slate-950",
+    chatComposerClass: "border-slate-300 bg-white text-slate-950",
+    chatInputClass:
+      "border-slate-300 bg-slate-50 text-slate-950 placeholder:text-slate-500",
+    chatMessagesClass: "bg-slate-200 text-slate-950",
+    otherBubbleClass: "rounded-bl-md bg-white text-slate-950",
+    floatingTextClass: "text-slate-950",
+  },
+  {
+    id: "blue",
+    label: "Azul suave",
+    color: "#dbeafe",
+    pageClass: "bg-blue-50",
+    surfaceClass: "border-blue-200 bg-white text-slate-950 shadow-sm",
+    softSurfaceClass: "border-blue-200 bg-white/90 text-slate-950",
+    controlClass: "border-blue-200 bg-white/90 text-slate-950",
+    chatPanelClass: "border-blue-200 bg-blue-50 text-slate-950",
+    chatHeaderClass: "border-blue-200 bg-white/90 text-slate-950",
+    chatComposerClass: "border-blue-200 bg-white/90 text-slate-950",
+    chatInputClass:
+      "border-blue-300 bg-white text-slate-950 placeholder:text-slate-500",
+    chatMessagesClass: "bg-blue-50 text-slate-950",
+    otherBubbleClass: "rounded-bl-md bg-white text-slate-950",
+    floatingTextClass: "text-slate-950",
+  },
+  {
+    id: "mint",
+    label: "Verde menta",
+    color: "#dcfce7",
+    pageClass: "bg-emerald-50",
+    surfaceClass: "border-emerald-200 bg-white text-slate-950 shadow-sm",
+    softSurfaceClass: "border-emerald-200 bg-white/90 text-slate-950",
+    controlClass: "border-emerald-200 bg-white/90 text-slate-950",
+    chatPanelClass: "border-emerald-200 bg-emerald-50 text-slate-950",
+    chatHeaderClass: "border-emerald-200 bg-white/90 text-slate-950",
+    chatComposerClass: "border-emerald-200 bg-white/90 text-slate-950",
+    chatInputClass:
+      "border-emerald-300 bg-white text-slate-950 placeholder:text-slate-500",
+    chatMessagesClass: "bg-emerald-50 text-slate-950",
+    otherBubbleClass: "rounded-bl-md bg-white text-slate-950",
+    floatingTextClass: "text-slate-950",
+  },
+];
+
+export function communicationBackgroundKey(userId?: string) {
+  return `${COMMUNICATION_BACKGROUND_STORAGE_PREFIX}_${userId || "anon"}`;
+}

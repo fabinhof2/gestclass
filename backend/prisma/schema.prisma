@@ -1,0 +1,1328 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  SUPERUSUARIO
+  ADMIN_ESCOLA
+  FINANCEIRO
+  GESTOR
+  COORDENADOR
+  SECRETARIA
+  AUXILIAR
+  PROFESSOR
+  RESPONSAVEL
+  ALUNO
+}
+
+enum FinanceiroCobrancaStatus {
+  PENDENTE
+  PAGO
+  ATRASADO
+  CANCELADO
+}
+
+enum FinanceiroGateway {
+  MERCADO_PAGO
+  PAYPAL
+  OUTRO
+}
+
+enum FinanceiroNotaFiscalTipo {
+  ESCOLAR
+  ASSINATURA
+}
+
+enum FinanceiroNotaFiscalStatus {
+  NAO_EMITIDA
+  EM_PROCESSAMENTO
+  EMITIDA
+  REJEITADA
+  CANCELADA
+}
+
+enum FinanceiroNotaFiscalAmbiente {
+  HOMOLOGACAO
+  PRODUCAO
+}
+
+enum FinanceiroNotaFiscalProvedor {
+  MUNICIPAL_API
+  FOCUS_NFE
+  NFE_IO
+  WEBMANIA
+  OUTRO
+}
+
+enum SchoolStatus {
+  ATIVA
+  TESTE_GRATIS
+  INADIMPLENTE
+  SUSPENSA
+  CANCELADA
+}
+
+enum SchoolPlan {
+  TESTE_15_DIAS
+  BASICO
+  PRO
+  PREMIUM
+}
+
+enum TipoAvaliacao {
+  BIMESTRAL
+  TRIMESTRAL
+}
+
+enum PeriodoAvaliacao {
+  PRIMEIRO
+  SEGUNDO
+  TERCEIRO
+  QUARTO
+}
+
+enum FrequenciaStatus {
+  PRESENTE
+  FALTA
+}
+
+enum CalendarioLetivoTipo {
+  DIA_SEM_AULA
+  RECESSO
+  FERIAS
+}
+
+enum CalendarioLetivoAbrangencia {
+  ESCOLA_INTEIRA
+  APENAS_TURMA
+  ESCOLA_INTEIRA_EXCETO_TURMA
+}
+
+enum TipoComposicaoNota {
+  MEDIA_ARITMETICA
+  SOMATORIO
+}
+
+enum TipoAtividadeNota {
+  TESTE
+  PROVA
+  TRABALHO
+  ATIVIDADE
+  PARTICIPACAO
+  OUTRO
+}
+
+enum AlunoDocumentoTipo {
+  IDENTIDADE
+  CERTIDAO_NASCIMENTO
+  COMPROVANTE_RESIDENCIA
+  DECLARACAO
+  HISTORICO_ESCOLAR
+}
+
+enum ResponsavelDocumentoTipo {
+  IDENTIDADE
+  CPF
+  COMPROVANTE_RESIDENCIA
+  CONTRATO_PRESTACAO_SERVICO
+}
+
+enum SolicitacaoTipo {
+  DECLARACAO
+  TRANSFERENCIA
+  HISTORICO_ESCOLAR
+  COMPROVANTE
+  INFORMACOES
+  GUIA_PAGAMENTO
+  OUTROS
+}
+
+enum SolicitacaoStatus {
+  ENVIADA
+  RECEBIDA
+  RESPONDIDA
+}
+
+enum TipoQuestaoOnline {
+  MULTIPLA_ESCOLHA
+  VERDADEIRO_FALSO
+  DESCRITIVA
+}
+
+enum ComunicacaoGrupoTipo {
+  TURMA
+  PERSONALIZADO
+}
+
+enum ComunicacaoPostTipo {
+  POST
+  AVISO
+}
+
+enum ComunicacaoReacaoTipo {
+  LIKE
+  DISLIKE
+}
+
+enum ForumAtividadeTipo {
+  PDF
+  VIDEO
+  TEXTO
+  MISTA
+}
+
+enum ForumEntregaStatus {
+  ENTREGUE
+  PENDENTE
+  CORRIGIDO
+}
+
+enum ForumEnqueteModoEscolha {
+  UNICA
+  MULTIPLA
+}
+
+enum ForumEnqueteVisibilidadeResultado {
+  IMEDIATO
+  APOS_VOTO
+  APOS_CONCLUIR
+}
+
+model School {
+  id            String        @id @default(cuid())
+  name          String
+  email         String?
+  phone         String?
+  logoUrl       String?
+  status        SchoolStatus  @default(TESTE_GRATIS)
+  plan          SchoolPlan    @default(BASICO)
+  tipoAvaliacao TipoAvaliacao @default(BIMESTRAL)
+  mediaAprovacao Decimal       @default(7.00) @db.Decimal(5, 2)
+  trialEndsAt   DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  turmas                     Turma[]
+  users                      User[]
+  userSchoolLinks            UserSchoolLink[]
+  alunos                     Aluno[]
+  notasBoletim               NotaBoletim[]
+  frequencias                Frequencia[]
+  avaliacaoItens             AvaliacaoItem[]
+  atividadeModelos           AtividadeAvaliacaoModelo[]
+  calendariosLetivos         CalendarioLetivo[]
+  avaliacoesOnline           AvaliacaoOnline[]
+  avaliacoesOnlineTentativas AvaliacaoOnlineTentativa[]
+  avaliacoesOnlineRespostas  AvaliacaoOnlineResposta[]
+  planosAnuaisConteudo       PlanoAnualConteudo[]
+  planejamentosDiarios       PlanejamentoDiarioConteudo[]
+  comunicacaoGrupos          ComunicacaoGrupo[]
+  comunicacaoPosts           ComunicacaoPost[]
+  comunicacaoComentarios     ComunicacaoComentario[]
+  comunicacaoReacoes         ComunicacaoReacao[]
+  comunicacaoMensagens       ComunicacaoMensagem[]
+  forumTopicos               ForumTopico[]
+  forumComentarios           ForumComentario[]
+  forumAtividades            ForumAtividade[]
+  forumEntregas              ForumEntrega[]
+  forumEnquetes              ForumEnquete[]
+  forumVotos                 ForumEnqueteVoto[]
+  professorAgendas           ProfessorAgenda[]
+  financeiroConfiguracao     FinanceiroConfiguracao?
+  financeiroCobrancas        FinanceiroCobranca[]
+  financeiroNotasFiscais     FinanceiroNotaFiscal[]
+  assinaturaCobrancas        FinanceiroAssinaturaCobranca[]
+  solicitacoes               Solicitacao[]
+  disciplinasTurma           DisciplinaTurma[]
+  horarioConfiguracao        SchoolHorarioConfiguracao?
+
+  @@map("schools")
+}
+
+model SchoolHorarioConfiguracao {
+  id                  String   @id @default(cuid())
+  schoolId            String   @unique
+  officialConfigsJson String?
+  turmaOverridesJson  String?
+  moduladorDraftJson  String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  @@map("school_horario_configuracoes")
+}
+
+model Turma {
+  id        String   @id @default(cuid())
+  name      String
+  turno     String?
+  schoolId  String
+  school    School   @relation(fields: [schoolId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  professores            TurmaProfessor[]
+  aulas                  Aula[]
+  alunos                 Aluno[]
+  calendariosLetivos     CalendarioLetivo[]
+  calendariosComoExcecao CalendarioLetivoTurmaExcecao[]
+  comunicacaoGrupos      ComunicacaoGrupo[]
+  forumTopicos           ForumTopico[]
+  forumAtividades        ForumAtividade[]
+  forumEnquetes          ForumEnquete[]
+  professorAgendas       ProfessorAgenda[]
+  disciplinas            DisciplinaTurma[]
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  username     String?  @unique
+  passwordHash String
+  role         UserRole
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  lastActiveAt DateTime?
+
+  phone      String?
+  address    String?
+  cpf        String?
+  cpfNormalized String?
+  identidade String?
+  fotoUrl    String?
+  comunicacaoSuspensoAte DateTime?
+  comunicacaoSuspensoMotivo String?
+
+  schoolId String?
+  school   School? @relation(fields: [schoolId], references: [id])
+
+  schoolLinks                UserSchoolLink[]
+  turmas                     TurmaProfessor[]
+  notasBoletimLancadas       NotaBoletim[]
+  frequenciasLancadas        Frequencia[]
+  avaliacaoItensLancados     AvaliacaoItem[]
+  atividadeModelos           AtividadeAvaliacaoModelo[]
+  avaliacoesOnlineCriadas    AvaliacaoOnline[]
+  avaliacoesOnlineTentativas AvaliacaoOnlineTentativa[]
+  avaliacoesOnlineRespostas  AvaliacaoOnlineResposta[]
+
+  activationToken   String?   @unique
+  activationExpires DateTime?
+  isActivated       Boolean   @default(false)
+
+  responsavelAlunos     AlunoResponsavel[]
+  responsavelDocumentos ResponsavelDocumento[]
+  calendarioLetivos     CalendarioLetivo[]
+  alunoPerfil           Aluno?                 @relation("AlunoUser")
+  planosAnuaisConteudo  PlanoAnualConteudo[]
+  planejamentosDiarios  PlanejamentoDiarioConteudo[]
+  comunicacaoGruposCriados      ComunicacaoGrupo[]      @relation("ComunicacaoGruposCriados")
+  comunicacaoMembros            ComunicacaoGrupoMembro[]
+  comunicacaoMembrosAdicionados ComunicacaoGrupoMembro[] @relation("ComunicacaoMembrosAdicionados")
+  comunicacaoPosts              ComunicacaoPost[]
+  comunicacaoComentarios        ComunicacaoComentario[]
+  comunicacaoReacoes            ComunicacaoReacao[]
+  comunicacaoMensagens          ComunicacaoMensagem[]
+  forumTopicos                  ForumTopico[]
+  forumComentarios              ForumComentario[]
+  forumAtividadesCriadas        ForumAtividade[]      @relation("ForumAtividadesCriadas")
+  forumEntregas                 ForumEntrega[]
+  forumEnquetesCriadas          ForumEnquete[]         @relation("ForumEnquetesCriadas")
+  forumVotos                    ForumEnqueteVoto[]
+  professorAgendas              ProfessorAgenda[]      @relation("ProfessorAgendas")
+  financeiroCobrancasResponsavel FinanceiroCobranca[]   @relation("FinanceiroCobrancasResponsavel")
+  solicitacoesCriadas             Solicitacao[]          @relation("SolicitacoesCriadas")
+  solicitacoesRecebidas           Solicitacao[]          @relation("SolicitacoesRecebidas")
+  solicitacoesRespondidas         Solicitacao[]          @relation("SolicitacoesRespondidas")
+
+  @@map("users")
+}
+
+model UserSchoolLink {
+  id        String   @id @default(cuid())
+  userId    String
+  schoolId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, schoolId])
+  @@index([schoolId])
+  @@map("user_school_links")
+}
+
+model TurmaProfessor {
+  id           String   @id @default(cuid())
+  turmaId      String
+  professorId  String
+  disciplinaId String?
+  disciplina   String
+  cargaHoraria Int
+  diasSemana   String[]
+
+  turma            Turma                      @relation(fields: [turmaId], references: [id])
+  professor        User                       @relation(fields: [professorId], references: [id])
+  disciplinaBase   DisciplinaTurma?           @relation(fields: [disciplinaId], references: [id], onDelete: SetNull)
+  aulas            Aula[]
+  notasBoletim     NotaBoletim[]
+  frequencias      Frequencia[]
+  avaliacaoItens   AvaliacaoItem[]
+  atividadeModelos AtividadeAvaliacaoModelo[]
+  avaliacoesOnline AvaliacaoOnline[]
+  planosAnuaisConteudo PlanoAnualConteudo[]
+  planejamentosDiarios PlanejamentoDiarioConteudo[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DisciplinaTurma {
+  id           String   @id @default(cuid())
+  schoolId      String
+  turmaId       String
+  serie         String
+  nome          String
+  cargaHoraria  Int
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  school        School           @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  turma         Turma            @relation(fields: [turmaId], references: [id], onDelete: Cascade)
+  modulacoes    TurmaProfessor[]
+
+  @@unique([turmaId, nome])
+  @@index([schoolId, serie])
+  @@index([turmaId])
+  @@map("disciplinas_turma")
+}
+
+model Aula {
+  id               String  @id @default(cuid())
+  turmaId          String
+  turmaProfessorId String?
+
+  diaSemana  String
+  horaInicio String
+  horaFim    String
+
+  disciplina String
+
+  turma          Turma           @relation(fields: [turmaId], references: [id])
+  turmaProfessor TurmaProfessor? @relation(fields: [turmaProfessorId], references: [id])
+  planejamentosDiarios PlanejamentoDiarioConteudo[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Aluno {
+  id          String  @id @default(cuid())
+  name        String
+  matricula   String?
+  responsavel String?
+  status      String  @default("ATIVO")
+  fotoUrl     String?
+  userId      String? @unique
+  user        User?   @relation("AlunoUser", fields: [userId], references: [id], onDelete: SetNull)
+
+  turmaId String
+  turma   Turma  @relation(fields: [turmaId], references: [id])
+
+  schoolId String
+  school   School @relation(fields: [schoolId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  responsaveis               AlunoResponsavel[]
+  documentos                 AlunoDocumento[]
+  notasBoletim               NotaBoletim[]
+  frequencias                Frequencia[]
+  avaliacaoItens             AvaliacaoItem[]
+  avaliacoesOnlineTentativas AvaliacaoOnlineTentativa[]
+  financeiroCobrancas        FinanceiroCobranca[]
+  solicitacoes               Solicitacao[]
+
+  @@unique([matricula, schoolId])
+  @@index([userId])
+}
+
+model Solicitacao {
+  id              String             @id @default(cuid())
+  schoolId        String
+  alunoId         String?
+  solicitanteId   String
+  recebidoPorId   String?
+  respondidoPorId String?
+  protocoloAno    Int?
+  protocoloDigitos Int?
+  protocoloNumero String?
+  tipo            SolicitacaoTipo
+  especificacao   String?
+  descricao       String
+  status          SolicitacaoStatus  @default(ENVIADA)
+  resposta        String?
+  anexoUrl        String?
+  anexoNome       String?
+  anexoMime       String?
+  receivedAt      DateTime?
+  respondedAt     DateTime?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  school      School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  aluno       Aluno? @relation(fields: [alunoId], references: [id], onDelete: SetNull)
+  solicitante User   @relation("SolicitacoesCriadas", fields: [solicitanteId], references: [id], onDelete: Cascade)
+  recebidoPor User?  @relation("SolicitacoesRecebidas", fields: [recebidoPorId], references: [id], onDelete: SetNull)
+  respondidoPor User? @relation("SolicitacoesRespondidas", fields: [respondidoPorId], references: [id], onDelete: SetNull)
+
+  @@index([schoolId, status, createdAt])
+  @@index([alunoId])
+  @@index([solicitanteId])
+  @@unique([protocoloAno, protocoloNumero])
+  @@map("solicitacoes")
+}
+
+model FinanceiroConfiguracao {
+  id                 String              @id @default(cuid())
+  schoolId           String              @unique
+  beneficiario       String?
+  documento          String?
+  banco              String?
+  agencia            String?
+  conta              String?
+  pixKey             String?
+  mensalidadePadrao  Decimal             @default(0) @db.Decimal(10, 2)
+  vencimentoDia      Int                 @default(10)
+  gestorAccessEnabled Boolean            @default(true)
+  secretariaAccessEnabled Boolean        @default(true)
+  gateway            FinanceiroGateway?
+  gatewayPublicKey   String?
+  gatewayAccessToken String?
+  webhookUrl         String?
+  fiscalEnabled      Boolean                         @default(false)
+  fiscalAmbiente     FinanceiroNotaFiscalAmbiente   @default(HOMOLOGACAO)
+  fiscalProvedor     FinanceiroNotaFiscalProvedor   @default(MUNICIPAL_API)
+  fiscalEndpointUrl  String?
+  fiscalApiToken     String?
+  fiscalMunicipioIbge String?
+  fiscalInscricaoMunicipal String?
+  fiscalCnae         String?
+  fiscalServicoCodigo String?
+  fiscalAliquotaIss  Decimal                         @default(0) @db.Decimal(5, 2)
+  fiscalDescricaoPadrao String?
+  fiscalEmitirAutomaticamente Boolean                @default(false)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+
+  school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  @@map("financeiro_configuracoes")
+}
+
+model FinanceiroAssinaturaConfiguracao {
+  id                  String              @id @default(cuid())
+  slug                String              @unique @default("default")
+  beneficiario        String?
+  documento           String?
+  banco               String?
+  agencia             String?
+  conta               String?
+  pixKey              String?
+  valorTeste15Dias    Decimal             @default(0) @db.Decimal(10, 2)
+  valorBasico         Decimal             @default(0) @db.Decimal(10, 2)
+  valorPro            Decimal             @default(0) @db.Decimal(10, 2)
+  valorPremium        Decimal             @default(0) @db.Decimal(10, 2)
+  vencimentoDia       Int                 @default(10)
+  gateway             FinanceiroGateway?
+  gatewayPublicKey    String?
+  gatewayAccessToken  String?
+  webhookUrl          String?
+  fiscalEnabled       Boolean                         @default(false)
+  fiscalAmbiente      FinanceiroNotaFiscalAmbiente   @default(HOMOLOGACAO)
+  fiscalProvedor      FinanceiroNotaFiscalProvedor   @default(MUNICIPAL_API)
+  fiscalEndpointUrl   String?
+  fiscalApiToken      String?
+  fiscalMunicipioIbge String?
+  fiscalInscricaoMunicipal String?
+  fiscalCnae          String?
+  fiscalServicoCodigo String?
+  fiscalAliquotaIss   Decimal                         @default(0) @db.Decimal(5, 2)
+  fiscalDescricaoPadrao String?
+  fiscalEmitirAutomaticamente Boolean                 @default(false)
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+
+  @@map("financeiro_assinatura_configuracoes")
+}
+
+model FinanceiroCobranca {
+  id               String                   @id @default(cuid())
+  schoolId         String
+  alunoId          String
+  responsavelId    String?
+  mes              Int
+  ano              Int
+  descricao        String
+  valor            Decimal                  @db.Decimal(10, 2)
+  vencimento       DateTime
+  status           FinanceiroCobrancaStatus @default(PENDENTE)
+  pagoEm           DateTime?
+  formaPagamento   String?
+  gateway          FinanceiroGateway?
+  gatewayPaymentId String?
+  boletoNossoNumero String?
+  createdAt        DateTime                 @default(now())
+  updatedAt        DateTime                 @updatedAt
+
+  school      School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  aluno       Aluno  @relation(fields: [alunoId], references: [id], onDelete: Cascade)
+  responsavel User?  @relation("FinanceiroCobrancasResponsavel", fields: [responsavelId], references: [id], onDelete: SetNull)
+  notaFiscal FinanceiroNotaFiscal?
+
+  @@unique([alunoId, mes, ano])
+  @@index([schoolId, ano, mes])
+  @@index([responsavelId])
+  @@map("financeiro_cobrancas")
+}
+
+model FinanceiroAssinaturaCobranca {
+  id                String                   @id @default(cuid())
+  schoolId          String
+  mes               Int
+  ano               Int
+  descricao         String
+  valor             Decimal                  @db.Decimal(10, 2)
+  vencimento        DateTime
+  status            FinanceiroCobrancaStatus @default(PENDENTE)
+  pagoEm            DateTime?
+  formaPagamento    String?
+  gateway           FinanceiroGateway?
+  gatewayPaymentId  String?
+  boletoNossoNumero String?
+  createdAt         DateTime                 @default(now())
+  updatedAt         DateTime                 @updatedAt
+
+  school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  notaFiscal FinanceiroNotaFiscal?
+
+  @@unique([schoolId, mes, ano])
+  @@index([ano, mes])
+  @@index([schoolId, ano, mes])
+  @@map("financeiro_assinatura_cobrancas")
+}
+
+model FinanceiroNotaFiscal {
+  id                   String                       @id @default(cuid())
+  schoolId             String?
+  cobrancaId           String?                      @unique
+  assinaturaCobrancaId String?                      @unique
+  tipo                 FinanceiroNotaFiscalTipo
+  status               FinanceiroNotaFiscalStatus   @default(NAO_EMITIDA)
+  ambiente             FinanceiroNotaFiscalAmbiente @default(HOMOLOGACAO)
+  provedor             FinanceiroNotaFiscalProvedor @default(MUNICIPAL_API)
+  numero               String?
+  codigoVerificacao    String?
+  chave                String?
+  linkPdf              String?
+  linkXml              String?
+  externalId           String?
+  protocolo            String?
+  mensagem             String?
+  payloadJson          String?
+  respostaJson         String?
+  emitidaEm            DateTime?
+  canceladaEm          DateTime?
+  createdAt            DateTime                     @default(now())
+  updatedAt            DateTime                     @updatedAt
+
+  school             School?                       @relation(fields: [schoolId], references: [id], onDelete: SetNull)
+  cobranca           FinanceiroCobranca?           @relation(fields: [cobrancaId], references: [id], onDelete: Cascade)
+  assinaturaCobranca FinanceiroAssinaturaCobranca? @relation(fields: [assinaturaCobrancaId], references: [id], onDelete: Cascade)
+
+  @@index([schoolId, status, createdAt])
+  @@index([tipo, status, createdAt])
+  @@map("financeiro_notas_fiscais")
+}
+
+model AtividadeAvaliacaoModelo {
+  id                 String             @id @default(cuid())
+  turmaProfessorId   String
+  schoolId           String
+  professorId        String
+  periodo            PeriodoAvaliacao
+  tipoComposicao     TipoComposicaoNota
+  tipoAtividade      TipoAtividadeNota
+  titulo             String
+  valorMaximo        Decimal            @db.Decimal(5, 2)
+  ordem              Int                @default(1)
+  permiteRecuperacao Boolean            @default(false)
+  enviadoBoletim     Boolean            @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  turmaProfessor         TurmaProfessor    @relation(fields: [turmaProfessorId], references: [id], onDelete: Cascade)
+  school                 School            @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  professor              User              @relation(fields: [professorId], references: [id], onDelete: Cascade)
+  avaliacaoItens         AvaliacaoItem[]
+  avaliacoesOnlineOrigem AvaliacaoOnline[]
+
+  @@index([schoolId, periodo])
+  @@index([professorId])
+  @@index([turmaProfessorId, periodo])
+  @@map("atividade_avaliacao_modelos")
+}
+
+model AvaliacaoItem {
+  id                String           @id @default(cuid())
+  atividadeModeloId String
+  alunoId           String
+  turmaProfessorId  String
+  schoolId          String
+  professorId       String
+  periodo           PeriodoAvaliacao
+  nota              Decimal          @db.Decimal(5, 2)
+  notaRecuperacao   Decimal?         @db.Decimal(5, 2)
+  notaConsiderada   Decimal          @db.Decimal(5, 2)
+  observacao        String?
+  enviadoBoletim    Boolean          @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  atividadeModelo AtividadeAvaliacaoModelo @relation(fields: [atividadeModeloId], references: [id], onDelete: Cascade)
+  aluno           Aluno                    @relation(fields: [alunoId], references: [id], onDelete: Cascade)
+  turmaProfessor  TurmaProfessor           @relation(fields: [turmaProfessorId], references: [id], onDelete: Cascade)
+  school          School                   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  professor       User                     @relation(fields: [professorId], references: [id], onDelete: Cascade)
+
+  @@unique([atividadeModeloId, alunoId])
+  @@index([schoolId, periodo])
+  @@index([professorId])
+  @@index([atividadeModeloId])
+  @@index([alunoId, turmaProfessorId, periodo])
+  @@map("avaliacao_itens")
+}
+
+model NotaBoletim {
+  id               String             @id @default(cuid())
+  alunoId          String
+  turmaProfessorId String
+  schoolId         String
+  professorId      String
+  periodo          PeriodoAvaliacao
+  tipoComposicao   TipoComposicaoNota
+  notaFinal        Decimal            @db.Decimal(5, 2)
+  enviadoBoletim   Boolean            @default(false)
+  observacao       String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  aluno          Aluno          @relation(fields: [alunoId], references: [id], onDelete: Cascade)
+  turmaProfessor TurmaProfessor @relation(fields: [turmaProfessorId], references: [id], onDelete: Cascade)
+  school         School         @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  professor      User           @relation(fields: [professorId], references: [id], onDelete: Cascade)
+
+  @@unique([alunoId, turmaProfessorId, periodo])
+  @@index([schoolId, periodo])
+  @@index([professorId])
+  @@map("notas_boletim")
+}
+
+model Frequencia {
+  id               String           @id @default(cuid())
+  alunoId          String
+  turmaProfessorId String
+  schoolId         String
+  professorId      String
+  dataLancamento   DateTime
+  status           FrequenciaStatus
+  faltaJustificada Boolean          @default(false)
+  observacao       String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  aluno          Aluno          @relation(fields: [alunoId], references: [id], onDelete: Cascade)
+  turmaProfessor TurmaProfessor @relation(fields: [turmaProfessorId], references: [id], onDelete: Cascade)
+  school         School         @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  professor      User           @relation(fields: [professorId], references: [id], onDelete: Cascade)
+
+  @@unique([alunoId, turmaProfessorId, dataLancamento])
+  @@index([schoolId, dataLancamento])
+  @@index([professorId])
+  @@map("frequencias")
+}
+
+model AlunoDocumento {
+  id           String             @id @default(cuid())
+  alunoId      String
+  tipo         AlunoDocumentoTipo
+  nomeOriginal String
+  arquivoUrl   String
+  mimeType     String?
+  observacao   String?
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+
+  aluno Aluno @relation(fields: [alunoId], references: [id], onDelete: Cascade)
+
+  @@map("aluno_documentos")
+}
+
+model ResponsavelDocumento {
+  id            String                   @id @default(cuid())
+  responsavelId String
+  tipo          ResponsavelDocumentoTipo
+  nomeOriginal  String
+  arquivoUrl    String
+  mimeType      String?
+  observacao    String?
+  createdAt     DateTime                 @default(now())
+  updatedAt     DateTime                 @updatedAt
+
+  responsavel User @relation(fields: [responsavelId], references: [id], onDelete: Cascade)
+
+  @@map("responsavel_documentos")
+}
+
+model AlunoResponsavel {
+  id            String  @id @default(cuid())
+  alunoId       String
+  responsavelId String
+  parentesco    String?
+  isFinanceiro  Boolean @default(false)
+
+  aluno       Aluno @relation(fields: [alunoId], references: [id], onDelete: Cascade)
+  responsavel User  @relation(fields: [responsavelId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([alunoId, responsavelId])
+}
+
+model CalendarioLetivo {
+  id          String                      @id @default(cuid())
+  schoolId    String
+  turmaId     String?
+  tipo        CalendarioLetivoTipo
+  abrangencia CalendarioLetivoAbrangencia
+  motivo      String
+  dataInicio  DateTime
+  dataFim     DateTime
+  createdById String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  school        School                         @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  turma         Turma?                         @relation(fields: [turmaId], references: [id], onDelete: Cascade)
+  createdBy     User                           @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  turmasExcecao CalendarioLetivoTurmaExcecao[]
+
+  @@index([schoolId, dataInicio, dataFim])
+  @@index([turmaId, dataInicio, dataFim])
+  @@index([createdById])
+  @@map("calendarios_letivos")
+}
+
+model CalendarioLetivoTurmaExcecao {
+  id                 String @id @default(cuid())
+  calendarioLetivoId String
+  turmaId            String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  calendarioLetivo CalendarioLetivo @relation(fields: [calendarioLetivoId], references: [id], onDelete: Cascade)
+  turma            Turma            @relation(fields: [turmaId], references: [id], onDelete: Cascade)
+
+  @@unique([calendarioLetivoId, turmaId])
+  @@index([turmaId])
+  @@map("calendario_letivo_turma_excecoes")
+}
+
+model ProfessorAgenda {
+  id          String   @id @default(cuid())
+  schoolId    String
+  turmaId     String
+  professorId String
+  data        DateTime
+  titulo      String
+  descricao   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  school    School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  turma     Turma  @relation(fields: [turmaId], references: [id], onDelete: Cascade)
+  professor User   @relation("ProfessorAgendas", fields: [professorId], references: [id], onDelete: Cascade)
+
+  @@index([schoolId, turmaId, data])
+  @@index([professorId, data])
+  @@map("professor_agendas")
+}
+
+model AvaliacaoOnline {
+  id                      String             @id @default(cuid())
+  turmaProfessorId        String
+  schoolId                String
+  professorId             String
+  atividadeModeloOrigemId String?
+  periodo                 PeriodoAvaliacao
+  tipoComposicao          TipoComposicaoNota @default(MEDIA_ARITMETICA)
+  titulo                  String
+  descricao               String?
+  instrucoes              String?
+  valor                   Decimal            @db.Decimal(5, 2)
+  ativo                   Boolean            @default(true)
+  publicada               Boolean            @default(false)
+  corrigeAutomaticamente  Boolean            @default(true)
+  lancadaNoSistemaNotas   Boolean            @default(false)
+  publicadaEm             DateTime?
+  encerradaEm             DateTime?
+  lancadaEm               DateTime?
+  createdAt               DateTime           @default(now())
+  updatedAt               DateTime           @updatedAt
+
+  turmaProfessor        TurmaProfessor            @relation(fields: [turmaProfessorId], references: [id], onDelete: Cascade)
+  school                School                    @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  professor             User                      @relation(fields: [professorId], references: [id], onDelete: Cascade)
+  atividadeModeloOrigem AtividadeAvaliacaoModelo? @relation(fields: [atividadeModeloOrigemId], references: [id], onDelete: SetNull)
+
+  perguntas  AvaliacaoOnlinePergunta[]
+  tentativas AvaliacaoOnlineTentativa[]
+
+  @@index([schoolId, periodo])
+  @@index([professorId])
+  @@index([turmaProfessorId, periodo])
+  @@map("avaliacoes_online")
+}
+
+model AvaliacaoOnlinePergunta {
+  id                String            @id @default(cuid())
+  avaliacaoOnlineId String
+  enunciado         String
+  tipoQuestao       TipoQuestaoOnline @default(MULTIPLA_ESCOLHA)
+  imagemUrl         String?
+  respostaEsperada  String?
+  ordem             Int               @default(1)
+  peso              Decimal           @db.Decimal(5, 2)
+  ativa             Boolean           @default(true)
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  avaliacaoOnline AvaliacaoOnline              @relation(fields: [avaliacaoOnlineId], references: [id], onDelete: Cascade)
+  alternativas    AvaliacaoOnlineAlternativa[]
+  respostas       AvaliacaoOnlineResposta[]
+
+  @@unique([avaliacaoOnlineId, ordem])
+  @@index([avaliacaoOnlineId])
+  @@map("avaliacoes_online_perguntas")
+}
+
+model AvaliacaoOnlineAlternativa {
+  id         String   @id @default(cuid())
+  perguntaId String
+  texto      String
+  ordem      Int      @default(1)
+  correta    Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  pergunta  AvaliacaoOnlinePergunta   @relation(fields: [perguntaId], references: [id], onDelete: Cascade)
+  respostas AvaliacaoOnlineResposta[]
+
+  @@unique([perguntaId, ordem])
+  @@index([perguntaId])
+  @@map("avaliacoes_online_alternativas")
+}
+
+model AvaliacaoOnlineTentativa {
+  id                  String    @id @default(cuid())
+  avaliacaoOnlineId   String
+  alunoId             String
+  schoolId            String
+  userAlunoId         String
+  iniciadaEm          DateTime  @default(now())
+  finalizadaEm        DateTime?
+  notaObjetiva        Decimal?  @db.Decimal(5, 2)
+  notaDescritiva      Decimal?  @db.Decimal(5, 2)
+  notaFinal           Decimal?  @db.Decimal(5, 2)
+  totalAcertos        Int       @default(0)
+  totalQuestoes       Int       @default(0)
+  finalizada          Boolean   @default(false)
+  refazerAutorizado   Boolean   @default(false)
+  refazerAutorizadoEm DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  avaliacaoOnline AvaliacaoOnline           @relation(fields: [avaliacaoOnlineId], references: [id], onDelete: Cascade)
+  aluno           Aluno                     @relation(fields: [alunoId], references: [id], onDelete: Cascade)
+  school          School                    @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  userAluno       User                      @relation(fields: [userAlunoId], references: [id], onDelete: Cascade)
+  respostas       AvaliacaoOnlineResposta[]
+
+  @@unique([avaliacaoOnlineId, alunoId])
+  @@index([schoolId])
+  @@index([userAlunoId])
+  @@index([avaliacaoOnlineId])
+  @@map("avaliacoes_online_tentativas")
+}
+
+model AvaliacaoOnlineResposta {
+  id                  String    @id @default(cuid())
+  tentativaId         String
+  perguntaId          String
+  alternativaId       String?
+  respostaTexto       String?
+  notaManual          Decimal?  @db.Decimal(5, 2)
+  feedbackProfessor   String?
+  corrigidaManual     Boolean   @default(false)
+  corrigidoPorUserId  String?
+  corrigidoEm         DateTime?
+  schoolId            String
+  respondidoPorUserId String
+  correta             Boolean   @default(false)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  tentativa         AvaliacaoOnlineTentativa    @relation(fields: [tentativaId], references: [id], onDelete: Cascade)
+  pergunta          AvaliacaoOnlinePergunta     @relation(fields: [perguntaId], references: [id], onDelete: Cascade)
+  alternativa       AvaliacaoOnlineAlternativa? @relation(fields: [alternativaId], references: [id], onDelete: SetNull)
+  school            School                      @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  respondidoPorUser User                        @relation(fields: [respondidoPorUserId], references: [id], onDelete: Cascade)
+
+  @@unique([tentativaId, perguntaId])
+  @@index([schoolId])
+  @@index([respondidoPorUserId])
+  @@index([perguntaId])
+  @@map("avaliacoes_online_respostas")
+}
+
+model PlanoAnualConteudo {
+  id               String   @id @default(cuid())
+  turmaProfessorId String
+  schoolId         String
+  professorId      String
+  ano              Int
+  conteudoGeral    String?
+  objetivoGeral    String?
+  metodologiaGeral String?
+  observacoes      String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  turmaProfessor TurmaProfessor              @relation(fields: [turmaProfessorId], references: [id], onDelete: Cascade)
+  school         School                      @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  professor      User                        @relation(fields: [professorId], references: [id], onDelete: Cascade)
+  planejamentos  PlanejamentoDiarioConteudo[]
+
+  @@unique([turmaProfessorId, ano])
+  @@index([schoolId, ano])
+  @@index([professorId, ano])
+  @@map("planos_anuais_conteudo")
+}
+
+model PlanejamentoDiarioConteudo {
+  id               String   @id @default(cuid())
+  planoAnualId     String
+  turmaProfessorId String
+  schoolId         String
+  professorId      String
+  aulaId           String
+  data             DateTime
+  conteudo         String?
+  objetivo         String?
+  metodologia      String?
+  atividades       String?
+  anexoUrl         String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  planoAnual     PlanoAnualConteudo @relation(fields: [planoAnualId], references: [id], onDelete: Cascade)
+  turmaProfessor TurmaProfessor     @relation(fields: [turmaProfessorId], references: [id], onDelete: Cascade)
+  school         School             @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  professor      User               @relation(fields: [professorId], references: [id], onDelete: Cascade)
+  aula           Aula               @relation(fields: [aulaId], references: [id], onDelete: Cascade)
+
+  @@unique([turmaProfessorId, aulaId, data])
+  @@index([schoolId, data])
+  @@index([professorId, data])
+  @@map("planejamentos_diarios_conteudo")
+}
+
+model ComunicacaoGrupo {
+  id          String               @id @default(cuid())
+  nome        String
+  tipo        ComunicacaoGrupoTipo @default(TURMA)
+  schoolId    String
+  turmaId     String?
+  createdById String?
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+
+  school    School                    @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  turma     Turma?                    @relation(fields: [turmaId], references: [id], onDelete: Cascade)
+  createdBy User?                     @relation("ComunicacaoGruposCriados", fields: [createdById], references: [id], onDelete: SetNull)
+  membros   ComunicacaoGrupoMembro[]
+  posts     ComunicacaoPost[]
+  mensagens ComunicacaoMensagem[]
+
+  @@index([schoolId])
+  @@index([turmaId])
+  @@map("comunicacao_grupos")
+}
+
+model ComunicacaoGrupoMembro {
+  id        String   @id @default(cuid())
+  grupoId   String
+  userId    String
+  addedById String?
+  createdAt DateTime @default(now())
+
+  grupo   ComunicacaoGrupo @relation(fields: [grupoId], references: [id], onDelete: Cascade)
+  user    User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  addedBy User?            @relation("ComunicacaoMembrosAdicionados", fields: [addedById], references: [id], onDelete: SetNull)
+
+  @@unique([grupoId, userId])
+  @@index([userId])
+  @@map("comunicacao_grupo_membros")
+}
+
+model ComunicacaoPost {
+  id        String              @id @default(cuid())
+  grupoId   String
+  schoolId  String
+  authorId  String
+  tipo      ComunicacaoPostTipo @default(POST)
+  texto     String?
+  mediaUrl  String?
+  mediaMime String?
+  moderadoAt DateTime?
+  moderadoPorId String?
+  moderadorRole UserRole?
+  motivoModeracao String?
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+
+  grupo       ComunicacaoGrupo        @relation(fields: [grupoId], references: [id], onDelete: Cascade)
+  school      School                  @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  author      User                    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  comentarios ComunicacaoComentario[]
+  reacoes     ComunicacaoReacao[]
+
+  @@index([grupoId, createdAt])
+  @@index([schoolId])
+  @@map("comunicacao_posts")
+}
+
+model ComunicacaoComentario {
+  id        String   @id @default(cuid())
+  postId    String
+  schoolId  String
+  authorId  String
+  texto     String
+  createdAt DateTime @default(now())
+
+  post   ComunicacaoPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  school School          @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  author User            @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([postId, createdAt])
+  @@index([schoolId])
+  @@map("comunicacao_comentarios")
+}
+
+model ComunicacaoReacao {
+  id        String                @id @default(cuid())
+  postId    String
+  schoolId  String
+  userId    String
+  tipo      ComunicacaoReacaoTipo
+  createdAt DateTime              @default(now())
+  updatedAt DateTime              @updatedAt
+
+  post   ComunicacaoPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  school School          @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  user   User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+  @@index([postId, tipo])
+  @@index([schoolId])
+  @@map("comunicacao_reacoes")
+}
+
+model ComunicacaoMensagem {
+  id        String   @id @default(cuid())
+  grupoId   String
+  schoolId  String
+  authorId  String
+  texto     String
+  mediaUrl  String?
+  mediaMime String?
+  createdAt DateTime @default(now())
+
+  grupo  ComunicacaoGrupo @relation(fields: [grupoId], references: [id], onDelete: Cascade)
+  school School           @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  author User             @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([grupoId, createdAt])
+  @@index([schoolId])
+  @@map("comunicacao_mensagens")
+}
+
+model ForumTopico {
+  id         String   @id @default(cuid())
+  schoolId   String
+  turmaId    String?
+  authorId   String
+  disciplina String?
+  titulo     String
+  conteudo   String
+  fixado     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  school      School            @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  turma       Turma?            @relation(fields: [turmaId], references: [id], onDelete: SetNull)
+  author      User              @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  comentarios ForumComentario[]
+
+  @@index([schoolId, createdAt])
+  @@index([turmaId, createdAt])
+  @@map("forum_topicos")
+}
+
+model ForumComentario {
+  id        String   @id @default(cuid())
+  topicoId  String
+  schoolId  String
+  authorId  String
+  texto     String
+  createdAt DateTime @default(now())
+
+  topico ForumTopico @relation(fields: [topicoId], references: [id], onDelete: Cascade)
+  school School      @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  author User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([topicoId, createdAt])
+  @@index([schoolId])
+  @@map("forum_comentarios")
+}
+
+model ForumAtividade {
+  id          String             @id @default(cuid())
+  schoolId    String
+  turmaId     String?
+  professorId String
+  disciplina  String?
+  titulo      String
+  descricao   String
+  tipo        ForumAtividadeTipo @default(MISTA)
+  prazo       DateTime?
+  arquivoUrl  String?
+  arquivoNome String?
+  arquivoMime String?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  school    School         @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  turma     Turma?         @relation(fields: [turmaId], references: [id], onDelete: SetNull)
+  professor User           @relation("ForumAtividadesCriadas", fields: [professorId], references: [id], onDelete: Cascade)
+  entregas  ForumEntrega[]
+
+  @@index([schoolId, createdAt])
+  @@index([turmaId, createdAt])
+  @@map("forum_atividades")
+}
+
+model ForumEntrega {
+  id          String             @id @default(cuid())
+  atividadeId String
+  schoolId    String
+  alunoId     String
+  texto       String?
+  arquivoUrl  String?
+  arquivoNome String?
+  arquivoMime String?
+  status      ForumEntregaStatus @default(ENTREGUE)
+  feedback    String?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  atividade ForumAtividade @relation(fields: [atividadeId], references: [id], onDelete: Cascade)
+  school    School         @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  aluno     User           @relation(fields: [alunoId], references: [id], onDelete: Cascade)
+
+  @@unique([atividadeId, alunoId])
+  @@index([schoolId, createdAt])
+  @@map("forum_entregas")
+}
+
+model ForumEnquete {
+  id                      String                              @id @default(cuid())
+  schoolId                String
+  turmaId                 String?
+  authorId                String
+  pergunta                String
+  modoEscolha             ForumEnqueteModoEscolha             @default(UNICA)
+  visibilidadeResultado   ForumEnqueteVisibilidadeResultado   @default(IMEDIATO)
+  encerramentoEm          DateTime?
+  concluidaEm             DateTime?
+  createdAt               DateTime                            @default(now())
+  updatedAt               DateTime                            @updatedAt
+
+  school  School              @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  turma   Turma?              @relation(fields: [turmaId], references: [id], onDelete: SetNull)
+  author  User                @relation("ForumEnquetesCriadas", fields: [authorId], references: [id], onDelete: Cascade)
+  opcoes  ForumEnqueteOpcao[]
+  votos   ForumEnqueteVoto[]
+
+  @@index([schoolId, createdAt])
+  @@index([turmaId, createdAt])
+  @@map("forum_enquetes")
+}
+
+model ForumEnqueteOpcao {
+  id        String @id @default(cuid())
+  enqueteId String
+  texto     String
+
+  enquete ForumEnquete      @relation(fields: [enqueteId], references: [id], onDelete: Cascade)
+  votos   ForumEnqueteVoto[]
+
+  @@index([enqueteId])
+  @@map("forum_enquete_opcoes")
+}
+
+model ForumEnqueteVoto {
+  id        String   @id @default(cuid())
+  enqueteId String
+  opcaoId   String
+  schoolId  String
+  userId    String
+  createdAt DateTime @default(now())
+
+  enquete ForumEnquete      @relation(fields: [enqueteId], references: [id], onDelete: Cascade)
+  opcao   ForumEnqueteOpcao @relation(fields: [opcaoId], references: [id], onDelete: Cascade)
+  school  School            @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  user    User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([enqueteId, userId, opcaoId])
+  @@index([schoolId])
+  @@index([enqueteId, userId])
+  @@map("forum_enquete_votos")
+}

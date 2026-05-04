@@ -1,0 +1,1 @@
+-- Nenhuma alteracao estrutural foi necessaria nesta migracao.
