@@ -40,6 +40,7 @@ type MenuItem = {
 type EscolaSidebar = {
   id: string;
   name: string;
+  logoUrl?: string | null;
 };
 
 type FinanceiroResumoResponsavel = {
@@ -390,6 +391,7 @@ export default function Sidebar({
     useState(true);
   const [financeiroGestaoDisponivel, setFinanceiroGestaoDisponivel] =
     useState(true);
+  const sidebarLogoUrl = escolasAdmin[0]?.logoUrl || null;
 
   useEffect(() => {
     async function fetchEscolasAdmin() {
@@ -641,8 +643,18 @@ export default function Sidebar({
       <aside className="glass-panel hidden min-h-screen w-[19rem] border-r border-white/30 bg-[linear-gradient(180deg,rgba(255,252,247,0.9),rgba(250,245,238,0.78))] lg:flex lg:flex-col">
       <div className="border-b border-white/40 px-6 py-7">
         <div className="flex items-center gap-3">
-          <div className="flex h-14 w-14 items-center justify-center rounded-[1.4rem] bg-[linear-gradient(135deg,#2f6c67,#8eb9ad)] text-xl font-bold text-white shadow-[0_16px_30px_rgba(47,108,103,0.28)]">
-            GC
+          <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-[1.4rem] bg-[linear-gradient(135deg,#2f6c67,#8eb9ad)] p-1 text-xl font-bold text-white shadow-[0_16px_30px_rgba(47,108,103,0.28)]">
+            {sidebarLogoUrl ? (
+              <div className="flex h-full w-full items-center justify-center rounded-[1rem] bg-white/90 p-1">
+                <img
+                  src={apiUrl(sidebarLogoUrl)}
+                  alt="Logo da escola"
+                  className="h-full w-full object-contain"
+                />
+              </div>
+            ) : (
+              "GC"
+            )}
           </div>
           <div>
             <h1 className="font-[var(--font-display)] text-2xl font-bold tracking-[-0.03em] text-slate-900">
@@ -751,15 +763,25 @@ export default function Sidebar({
             <div className="border-b border-white/40 px-6 py-7">
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-[1.4rem] bg-[linear-gradient(135deg,#2f6c67,#8eb9ad)] text-xl font-bold text-white shadow-[0_16px_30px_rgba(47,108,103,0.28)]">
-                    GC
+                  <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-[1.4rem] bg-[linear-gradient(135deg,#2f6c67,#8eb9ad)] p-1 text-xl font-bold text-white shadow-[0_16px_30px_rgba(47,108,103,0.28)]">
+                    {sidebarLogoUrl ? (
+                      <div className="flex h-full w-full items-center justify-center rounded-[1rem] bg-white/90 p-1">
+                        <img
+                          src={apiUrl(sidebarLogoUrl)}
+                          alt="Logo da escola"
+                          className="h-full w-full object-contain"
+                        />
+                      </div>
+                    ) : (
+                      "GC"
+                    )}
                   </div>
                   <div>
                     <h1 className="font-[var(--font-display)] text-2xl font-bold tracking-[-0.03em] text-slate-900">
                       GestClass
                     </h1>
                     <p className="text-sm text-slate-500">
-                      Painel escolar com presenÃ§a premium
+                      Painel escolar com presença premium
                     </p>
                   </div>
                 </div>

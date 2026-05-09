@@ -40,15 +40,15 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-x-hidden bg-[linear-gradient(135deg,#f7f3ec_0%,#f9f6f0_46%,#efe5d6_100%)] px-4 py-6 sm:px-6 lg:px-8">
+    <main className="relative min-h-screen overflow-x-hidden bg-[linear-gradient(135deg,#eef4ff_0%,#f6f9ff_46%,#dfeaff_100%)] px-4 py-6 sm:px-6 lg:px-8">
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-[-4rem] top-[-2rem] h-40 w-40 rounded-full bg-[rgba(216,141,98,0.16)] blur-3xl sm:h-56 sm:w-56" />
-        <div className="absolute bottom-[-3rem] right-[-2rem] h-52 w-52 rounded-full bg-[rgba(142,185,173,0.18)] blur-3xl sm:h-72 sm:w-72" />
+        <div className="absolute left-[-4rem] top-[-2rem] h-40 w-40 rounded-full bg-[rgba(59,130,246,0.16)] blur-3xl sm:h-56 sm:w-56" />
+        <div className="absolute bottom-[-3rem] right-[-2rem] h-52 w-52 rounded-full bg-[rgba(96,165,250,0.2)] blur-3xl sm:h-72 sm:w-72" />
       </div>
 
       <div className="relative mx-auto flex min-h-[calc(100vh-3rem)] w-full max-w-6xl items-center justify-center">
         <div className="grid w-full max-w-5xl items-stretch overflow-hidden rounded-[2rem] border border-white/50 bg-[rgba(255,252,247,0.74)] shadow-[0_24px_70px_rgba(73,92,111,0.14)] backdrop-blur-xl lg:grid-cols-[minmax(0,1.1fr)_minmax(320px,420px)]">
-          <section className="hidden min-w-0 flex-col justify-between bg-[linear-gradient(160deg,rgba(47,108,103,0.96),rgba(31,81,77,0.98))] px-8 py-10 text-white lg:flex xl:px-10">
+          <section className="hidden min-w-0 flex-col justify-between bg-[linear-gradient(160deg,rgba(30,64,175,0.97),rgba(37,99,235,0.99))] px-8 py-10 text-white lg:flex xl:px-10">
             <div>
               <div className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.24em] text-white/85">
                 GestClass
@@ -79,7 +79,7 @@ export default function LoginPage() {
           <section className="min-w-0 px-5 py-6 sm:px-8 sm:py-8 lg:px-10 lg:py-10">
             <div className="mx-auto flex w-full max-w-md flex-col">
               <div className="text-center lg:text-left">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-[1.4rem] bg-[linear-gradient(135deg,#2f6c67,#8eb9ad)] text-xl font-black text-white shadow-[0_18px_32px_rgba(47,108,103,0.24)] lg:mx-0">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-[1.4rem] bg-[linear-gradient(135deg,#2563eb,#60a5fa)] text-xl font-black text-white shadow-[0_18px_32px_rgba(37,99,235,0.28)] lg:mx-0">
                   GC
                 </div>
 
@@ -136,14 +136,14 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[linear-gradient(135deg,#2f6c67,#1f514d)] px-4 py-3.5 text-sm font-bold text-white shadow-[0_18px_30px_rgba(47,108,103,0.22)] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[linear-gradient(135deg,#2563eb,#1d4ed8)] px-4 py-3.5 text-sm font-bold text-white shadow-[0_18px_30px_rgba(37,99,235,0.24)] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {loading ? "Entrando..." : "Entrar"}
                   {loading ? null : <ArrowRight size={16} />}
                 </button>
               </form>
 
-              <div className="mt-6 rounded-2xl border border-[rgba(47,108,103,0.12)] bg-[rgba(255,255,255,0.68)] px-4 py-4 text-sm text-slate-600">
+              <div className="mt-6 rounded-2xl border border-[rgba(37,99,235,0.12)] bg-[rgba(255,255,255,0.72)] px-4 py-4 text-sm text-slate-600">
                 <p className="font-semibold text-slate-800">Acesso protegido por perfil</p>
                 <p className="mt-1 leading-6">
                   O sistema direciona automaticamente cada usuário para a área correta após o login.

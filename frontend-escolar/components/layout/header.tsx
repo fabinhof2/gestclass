@@ -946,12 +946,12 @@ export default function Header({ onMenuToggle }: HeaderProps) {
         </button>
 
         {user?.role !== "SUPERUSUARIO" ? (
-          <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl border border-white/50 bg-white/80 shadow-[0_10px_24px_rgba(92,109,126,0.12)]">
+          <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl border border-white/50 bg-white/90 p-1 shadow-[0_10px_24px_rgba(92,109,126,0.12)]">
             {visibleSchool?.logoUrl ? (
               <img
                 src={apiUrl(visibleSchool.logoUrl)}
                 alt="Logo da escola"
-                className="h-full w-full object-cover"
+                className="h-full w-full object-contain"
               />
             ) : (
               <span className="text-xs font-semibold text-slate-400">Logo</span>
