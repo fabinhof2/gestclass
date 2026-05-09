@@ -477,7 +477,7 @@ export default function SuperusuarioPage() {
 
   return (
     <ProtectedRoute allowedRoles={["SUPERUSUARIO"]}>
-      <section className="space-y-6">
+      <section className="min-w-0 space-y-6">
         <PageHeader
           title="Painel Superusuário"
           description="Gestão global das escolas, assinaturas, métricas, backups e acesso de manutenção."
@@ -502,8 +502,8 @@ export default function SuperusuarioPage() {
           <MetricCard label="Inadimplentes" value={summary?.delinquentSchools || 0} icon={CreditCard} />
         </div>
 
-        <div className="card-base flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between">
-          <div>
+        <div className="card-base flex min-w-0 flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between">
+          <div className="min-w-0">
             <h2 className="text-xl font-bold text-slate-900">Restaurar backup completo</h2>
             <p className="text-sm text-slate-500">
               Envie o arquivo JSON gerado no botão Backup para recriar a escola com turmas, alunos, professores, horários, mensagens, notas e configurações.
@@ -520,17 +520,17 @@ export default function SuperusuarioPage() {
             type="button"
             onClick={() => backupInputRef.current?.click()}
             disabled={restoringBackup}
-            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-bold text-white transition hover:bg-slate-800 disabled:opacity-60"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-bold text-white transition hover:bg-slate-800 disabled:opacity-60 md:w-auto"
           >
             {restoringBackup ? <Loader2 size={18} className="animate-spin" /> : <FileUp size={18} />}
             {restoringBackup ? "Restaurando..." : "Upload do backup"}
           </button>
         </div>
 
-        <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_420px]">
-          <div className="card-base p-5">
+        <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_420px]">
+          <div className="card-base min-w-0 p-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <div>
+              <div className="min-w-0">
                 <h2 className="text-xl font-bold text-slate-900">Escolas cadastradas</h2>
                 <p className="text-sm text-slate-500">
                   Bloqueie acessos, gere backup completo, exclua do banco ou acesse como admin da escola.
@@ -665,7 +665,7 @@ export default function SuperusuarioPage() {
                 </div>
 
                 <div className="mt-5 hidden overflow-x-auto md:block">
-                <table className="w-full min-w-[1120px] text-left text-sm">
+                  <table className="w-full min-w-[1120px] text-left text-sm">
                   <thead className="text-xs uppercase text-slate-500">
                     <tr>
                       <th className="px-3 py-3">Escola</th>
@@ -736,15 +736,15 @@ export default function SuperusuarioPage() {
                       );
                     })}
                   </tbody>
-                </table>
+                  </table>
                 </div>
               </>
             )}
           </div>
 
-          <form onSubmit={handleSubmit} className="card-base p-5">
+          <form onSubmit={handleSubmit} className="card-base min-w-0 p-5">
             <div className="flex items-start justify-between gap-3">
-              <div>
+              <div className="min-w-0">
                 <h2 className="text-xl font-bold text-slate-900">
                   {editingSchoolId ? "Editar escola" : "Nova escola"}
                 </h2>
@@ -755,7 +755,7 @@ export default function SuperusuarioPage() {
               <button
                 type="button"
                 onClick={startCreate}
-                className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-3 py-2 text-xs font-bold text-white"
+                className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-slate-900 px-3 py-2 text-xs font-bold text-white"
               >
                 <Plus size={15} />
                 Novo
@@ -895,7 +895,7 @@ function Input({
   step?: string;
 }) {
   return (
-    <label className="block">
+    <label className="block min-w-0">
       <span className="text-sm font-bold text-slate-700">{label}</span>
       <input
         type={type}
@@ -905,7 +905,7 @@ function Input({
         min={min}
         max={max}
         step={step}
-        className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
+        className="mt-1 block w-full min-w-0 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
       />
     </label>
   );
@@ -923,12 +923,12 @@ function Select({
   children: React.ReactNode;
 }) {
   return (
-    <label className="block">
+    <label className="block min-w-0">
       <span className="text-sm font-bold text-slate-700">{label}</span>
       <select
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
+        className="mt-1 block w-full min-w-0 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
       >
         {children}
       </select>

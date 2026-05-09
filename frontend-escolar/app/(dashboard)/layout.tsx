@@ -47,7 +47,7 @@ export default function DashboardLayout({
           />
         ) : null}
 
-        <main className="relative flex-1 overflow-hidden">
+        <main className="relative min-w-0 flex-1 overflow-x-clip">
           {!isSocialImmersive ? (
             <div className="pointer-events-none absolute inset-0">
               <div className="absolute left-10 top-10 h-40 w-40 rounded-full bg-[rgba(216,141,98,0.08)] blur-3xl" />
@@ -59,7 +59,7 @@ export default function DashboardLayout({
             className={
               isSocialImmersive
                 ? "relative min-h-screen"
-                : "soft-container relative space-y-6 py-6 md:py-8"
+                : "soft-container relative min-w-0 space-y-6 py-6 md:py-8"
             }
           >
             {!isSocialImmersive ? (
