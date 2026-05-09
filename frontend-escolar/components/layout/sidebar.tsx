@@ -661,7 +661,7 @@ export default function Sidebar({
               GestClass
             </h1>
             <p className="text-sm text-slate-500">
-              Painel escolar com presença premium
+              {"Painel escolar com presen\u00e7a premium"}
             </p>
 
             {user && (
@@ -781,7 +781,7 @@ export default function Sidebar({
                       GestClass
                     </h1>
                     <p className="text-sm text-slate-500">
-                      Painel escolar com presença premium
+                      {"Painel escolar com presen\u00e7a premium"}
                     </p>
                   </div>
                 </div>

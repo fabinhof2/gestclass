@@ -581,6 +581,7 @@ export default function ChatPage() {
       );
     });
   }, [grupos, chatSearch]);
+  const mobileConversationOpen = Boolean(grupoId);
 
   function persistSeenMessageCounts(
     updater: Record<string, number> | ((current: Record<string, number>) => Record<string, number>),
@@ -1316,12 +1317,14 @@ function getConversationSubtitle(grupo: Grupo) {
         ) : null}
         {conversaSomenteLeitura ? (
           <div className="mx-4 mt-4 rounded-xl border border-amber-400/30 bg-amber-950/60 px-4 py-3 text-sm font-medium text-amber-100">
-            Visualização segura: a gestão pode acompanhar esta conversa privada, mas não pode escrever nela.
+            {"Visualiza\u00e7\u00e3o segura: a gest\u00e3o pode acompanhar esta conversa privada, mas n\u00e3o pode escrever nela."}
           </div>
         ) : null}
 
       <div className="grid min-h-0 flex-1 gap-0 overflow-hidden xl:grid-cols-[360px_minmax(0,1fr)]">
-        <aside className="flex min-h-0 flex-col overflow-hidden border-r border-[#d1d7db] bg-[#f0f2f5]">
+        <aside
+          className={`${mobileConversationOpen ? "hidden xl:flex" : "flex"} min-h-0 flex-col overflow-hidden border-r border-[#d1d7db] bg-[#f0f2f5]`}
+        >
           <div className="shrink-0 border-b border-[#d1d7db] p-5">
             <div className="flex items-center justify-between gap-3">
               <button
@@ -1397,12 +1400,24 @@ function getConversationSubtitle(grupo: Grupo) {
           </div>
         </aside>
 
-        <div className="flex min-h-0 flex-col overflow-hidden bg-[#efeae2]">
+        <div
+          className={`${mobileConversationOpen ? "flex" : "hidden xl:flex"} min-h-0 flex-col overflow-hidden bg-[#efeae2]`}
+        >
           <div className="shrink-0 flex items-center justify-between gap-3 border-b border-[#d1d7db] bg-[#f0f2f5] px-5 py-3">
             <div className="min-w-0">
-              <h2 className="truncate text-lg font-bold text-slate-900">
-                {grupoAtual?.nome || "Selecione uma conversa"}
-              </h2>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setGrupoId("")}
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white text-slate-700 shadow-sm xl:hidden"
+                  aria-label="Voltar para conversas"
+                >
+                  <ArrowLeft size={17} />
+                </button>
+                <h2 className="truncate text-lg font-bold text-slate-900">
+                  {grupoAtual?.nome || "Selecione uma conversa"}
+                </h2>
+              </div>
               <p className="mt-1 truncate text-xs font-medium text-slate-500">
                 {grupoAtual?.turma?.name || "Comunicação interna"}
               </p>
@@ -1437,7 +1452,7 @@ function getConversationSubtitle(grupo: Grupo) {
               <button
                 type="button"
                 onClick={() => router.push("/dashboard")}
-                className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50"
+                className="hidden xl:inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50"
               >
                 <ArrowLeft size={16} />
                 Dashboard

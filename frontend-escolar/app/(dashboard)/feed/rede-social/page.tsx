@@ -763,7 +763,202 @@ export default function RedeSocialPage() {
           </div>
         </div>
 
-        <div className="grid gap-6 xl:grid-cols-[260px_minmax(0,1fr)_340px]">
+        <div className="xl:hidden">
+          <div className="mb-5 flex gap-2 overflow-x-auto pb-1">
+            {socialGroups.map((grupo) => {
+              const isActive = grupo.id === grupoId;
+              return (
+                <button
+                  key={`mobile-group-${grupo.id}`}
+                  type="button"
+                  onClick={() => setGrupoId(grupo.id)}
+                  className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition ${
+                    isActive
+                      ? "bg-slate-950 text-white shadow-sm"
+                      : "border border-slate-200 bg-white/85 text-slate-700"
+                  }`}
+                >
+                  {getGroupLabel(grupo)}
+                </button>
+              );
+            })}
+          </div>
+
+          <main className="space-y-5">
+            {!isResponsavel ? (
+              <form
+                onSubmit={handlePost}
+                className="overflow-hidden rounded-[2rem] border border-white/45 bg-white/85 p-4 shadow-[0_18px_50px_rgba(15,23,42,0.08)] backdrop-blur-xl"
+              >
+                <div className="flex items-center gap-3">
+                  <Avatar
+                    pessoa={{
+                      id: user?.id || "",
+                      name: user?.name || "Usuario",
+                      role: user?.role || "ALUNO",
+                      fotoUrl: user?.fotoUrl,
+                    }}
+                    size="sm"
+                  />
+                  <div>
+                    <p className="text-sm font-bold text-slate-900">Criar publicação</p>
+                    <p className="text-xs text-slate-500">Um feed mais limpo e natural para o celular.</p>
+                  </div>
+                </div>
+
+                <textarea
+                  value={texto}
+                  onChange={(e) => setTexto(e.target.value)}
+                  placeholder={"No que sua escola est\u00e1 pensando hoje?"}
+                  className="mt-4 min-h-28 w-full resize-none rounded-[1.5rem] border border-slate-200 bg-white px-4 py-4 text-sm text-slate-700 outline-none focus:border-slate-400"
+                />
+
+                {file ? (
+                  <div className="mt-3 rounded-2xl bg-slate-100 px-4 py-3 text-xs text-slate-700">
+                    {"M\u00eddia selecionada: "} <strong>{file.name}</strong>
+                  </div>
+                ) : null}
+
+                <div className="mt-4 flex flex-wrap items-center gap-2">
+                  <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700">
+                    <ImagePlus size={16} />
+                    <span>Mídia</span>
+                    <input
+                      type="file"
+                      accept="image/*,video/*"
+                      onChange={(e) => setFile(e.target.files?.[0] || null)}
+                      className="hidden"
+                    />
+                  </label>
+
+                  <button
+                    type="button"
+                    onClick={() => setTipo(tipo === "AVISO" ? "POST" : "AVISO")}
+                    disabled={user?.role === "ALUNO"}
+                    className={`inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-medium disabled:opacity-50 ${
+                      tipo === "AVISO"
+                        ? "bg-amber-100 text-amber-800"
+                        : "border border-slate-200 bg-white text-slate-700"
+                    }`}
+                  >
+                    <Megaphone size={16} />
+                    Aviso
+                  </button>
+
+                  <button
+                    type="submit"
+                    disabled={posting || !grupoId}
+                    className="ml-auto rounded-full bg-slate-950 px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
+                  >
+                    {posting ? "Publicando..." : "Publicar"}
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <div className="rounded-[2rem] border border-white/45 bg-white/85 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.08)] backdrop-blur-xl">
+                <p className="text-sm font-bold text-slate-900">Acompanhamento da rede social</p>
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  {"Voc\u00ea visualiza as publica\u00e7\u00f5es das turmas dos seus filhos e da escola em modo somente leitura."}
+                </p>
+              </div>
+            )}
+
+            {posts.length === 0 ? (
+              <div className="rounded-[2rem] border border-white/45 bg-white/85 p-8 text-center text-sm text-slate-600 shadow-[0_18px_50px_rgba(15,23,42,0.08)] backdrop-blur-xl">
+                {"Nenhum post ainda. A primeira publica\u00e7\u00e3o deixa a comunidade viva."}
+              </div>
+            ) : (
+              posts.map((post) => (
+                <article
+                  key={`mobile-post-${post.id}`}
+                  className={`overflow-hidden rounded-[2rem] border border-white/45 bg-white/95 shadow-[0_22px_60px_rgba(15,23,42,0.08)] ${
+                    post.tipo === "AVISO" ? "ring-1 ring-amber-300/70" : ""
+                  }`}
+                >
+                  <div className="flex items-center gap-3 px-4 pb-3 pt-4">
+                    <Avatar pessoa={post.author} size="sm" />
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-bold text-slate-950">{post.author.name}</p>
+                      <p className="mt-0.5 truncate text-[11px] font-medium text-slate-500">
+                        {formatRole(post.author.role)} · {formatDate(post.createdAt)}
+                      </p>
+                    </div>
+                    {post.tipo === "AVISO" ? (
+                      <span className="rounded-full bg-amber-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-amber-800">
+                        Aviso
+                      </span>
+                    ) : null}
+                  </div>
+
+                  {!post.moderado && post.mediaUrl ? (
+                    post.mediaMime?.startsWith("video/") ? (
+                      <video
+                        src={mediaSrc(post.mediaUrl)}
+                        controls
+                        className="aspect-square w-full bg-black object-cover"
+                      />
+                    ) : (
+                      <img
+                        src={mediaSrc(post.mediaUrl)}
+                        alt={"M\u00eddia da publica\u00e7\u00e3o"}
+                        className="aspect-square w-full bg-slate-100 object-cover"
+                      />
+                    )
+                  ) : null}
+
+                  <div className="px-4 py-4">
+                    {post.texto ? (
+                      <p className="whitespace-pre-wrap text-[15px] leading-7 text-slate-800">
+                        {post.texto}
+                      </p>
+                    ) : null}
+
+                    {!post.moderado ? (
+                      <div className="mt-4 flex flex-wrap items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => handleReacao(post.id, "LIKE")}
+                          className={`inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm font-semibold ${
+                            post.reacoes.minhaReacao === "LIKE"
+                              ? "border-emerald-600 bg-emerald-50 text-emerald-700"
+                              : "border-slate-200 bg-white text-slate-700"
+                          }`}
+                        >
+                          <ThumbsUp size={16} />
+                          {post.reacoes.gostei}
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => handleReacao(post.id, "DISLIKE")}
+                          className={`inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm font-semibold ${
+                            post.reacoes.minhaReacao === "DISLIKE"
+                              ? "border-rose-600 bg-rose-50 text-rose-700"
+                              : "border-slate-200 bg-white text-slate-700"
+                          }`}
+                        >
+                          <ThumbsDown size={16} />
+                          {post.reacoes.naoGostei}
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setActiveCommentsPostId(post.id)}
+                          className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700"
+                        >
+                          <MessageCircle size={16} />
+                          {post.comentarios.length}
+                        </button>
+                      </div>
+                    ) : null}
+                  </div>
+                </article>
+              ))
+            )}
+          </main>
+        </div>
+
+        <div className="hidden gap-6 xl:grid xl:grid-cols-[260px_minmax(0,1fr)_340px]">
           <aside className="space-y-5">
             <div className="rounded-[2rem] border border-white/35 bg-transparent p-4 shadow-none">
               <div className="flex items-start justify-between gap-3">
