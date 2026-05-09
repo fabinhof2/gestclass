@@ -9,7 +9,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { Bell, RotateCcw, Search } from "lucide-react";
+import { Bell, Menu, RotateCcw, Search } from "lucide-react";
 import { useAuth, UserRole } from "@/context/auth-context";
 import { apiUrl } from "@/lib/api";
 import { usePathname, useRouter } from "next/navigation";
@@ -353,7 +353,11 @@ function canSearchAlunos(role?: UserRole) {
   );
 }
 
-export default function Header() {
+type HeaderProps = {
+  onMenuToggle?: () => void;
+};
+
+export default function Header({ onMenuToggle }: HeaderProps) {
   const { user, token, selectedSchool, exitSchoolMaintenance } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -932,6 +936,15 @@ export default function Header() {
   return (
     <header className="glass-panel relative z-[120] flex flex-col gap-4 overflow-visible rounded-[1.75rem] border border-white/40 px-4 py-4 shadow-[0_18px_44px_rgba(74,93,110,0.08)] md:flex-row md:items-center md:justify-between md:px-5">
       <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={onMenuToggle}
+          className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/45 bg-white/78 shadow-[0_12px_26px_rgba(85,103,120,0.08)] lg:hidden"
+          title="Abrir menu"
+        >
+          <Menu size={18} />
+        </button>
+
         {user?.role !== "SUPERUSUARIO" ? (
           <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl border border-white/50 bg-white/80 shadow-[0_10px_24px_rgba(92,109,126,0.12)]">
             {visibleSchool?.logoUrl ? (

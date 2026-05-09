@@ -19,6 +19,7 @@ import {
   ShieldAlert,
   Users,
   Wallet,
+  X,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import Link from "next/link";
@@ -352,7 +353,15 @@ const items: MenuItem[] = [
   },
 ];
 
-export default function Sidebar() {
+type SidebarProps = {
+  mobileOpen?: boolean;
+  onClose?: () => void;
+};
+
+export default function Sidebar({
+  mobileOpen = false,
+  onClose,
+}: SidebarProps) {
   const { user, token, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -622,20 +631,22 @@ export default function Sidebar() {
   ]);
 
   const handleLogout = useCallback(() => {
+    onClose?.();
     logout();
     router.push("/login");
-  }, [logout, router]);
+  }, [logout, onClose, router]);
 
   return (
-    <aside className="glass-panel hidden min-h-screen w-[19rem] border-r border-white/30 bg-[linear-gradient(180deg,rgba(255,252,247,0.9),rgba(250,245,238,0.78))] lg:flex lg:flex-col">
+    <>
+      <aside className="glass-panel hidden min-h-screen w-[19rem] border-r border-white/30 bg-[linear-gradient(180deg,rgba(255,252,247,0.9),rgba(250,245,238,0.78))] lg:flex lg:flex-col">
       <div className="border-b border-white/40 px-6 py-7">
         <div className="flex items-center gap-3">
           <div className="flex h-14 w-14 items-center justify-center rounded-[1.4rem] bg-[linear-gradient(135deg,#2f6c67,#8eb9ad)] text-xl font-bold text-white shadow-[0_16px_30px_rgba(47,108,103,0.28)]">
-            EC
+            GC
           </div>
           <div>
             <h1 className="font-[var(--font-display)] text-2xl font-bold tracking-[-0.03em] text-slate-900">
-              EduConnect
+              GestClass
             </h1>
             <p className="text-sm text-slate-500">
               Painel escolar com presença premium
@@ -726,5 +737,110 @@ export default function Sidebar() {
         )}
       </div>
     </aside>
+
+      {mobileOpen ? (
+        <div className="fixed inset-0 z-[200] flex lg:hidden">
+          <button
+            type="button"
+            onClick={onClose}
+            className="absolute inset-0 bg-slate-950/45 backdrop-blur-[2px]"
+            aria-label="Fechar menu"
+          />
+
+          <aside className="glass-panel relative z-[201] flex h-full w-[min(88vw,22rem)] flex-col border-r border-white/30 bg-[linear-gradient(180deg,rgba(255,252,247,0.98),rgba(250,245,238,0.94))] shadow-[0_24px_64px_rgba(15,23,42,0.28)]">
+            <div className="border-b border-white/40 px-6 py-7">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-[1.4rem] bg-[linear-gradient(135deg,#2f6c67,#8eb9ad)] text-xl font-bold text-white shadow-[0_16px_30px_rgba(47,108,103,0.28)]">
+                    GC
+                  </div>
+                  <div>
+                    <h1 className="font-[var(--font-display)] text-2xl font-bold tracking-[-0.03em] text-slate-900">
+                      GestClass
+                    </h1>
+                    <p className="text-sm text-slate-500">
+                      Painel escolar com presenÃ§a premium
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/45 bg-white/70 text-slate-600 shadow-sm"
+                  title="Fechar menu"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+            </div>
+
+            <nav className="flex-1 space-y-2 overflow-y-auto px-4 py-5">
+              {filteredItems.map((item) => {
+                const Icon = item.icon;
+                const isActive =
+                  item.href !== "#" &&
+                  (pathname === item.href || pathname.startsWith(`${item.href}/`));
+                const className = `menu-item ${isActive ? "menu-item-active" : ""} ${
+                  item.soon || item.href === "#" ? "opacity-60 cursor-not-allowed" : ""
+                }`;
+
+                if (item.soon || item.href === "#") {
+                  return (
+                    <button
+                      key={`mobile-${item.label}`}
+                      type="button"
+                      className={`${className} w-full`}
+                      disabled
+                      title="Recurso em breve"
+                    >
+                      <Icon size={18} />
+                      <span className="flex-1 text-left">{item.label}</span>
+                      <span className="rounded-full bg-white/80 px-2 py-0.5 text-[10px] font-semibold text-slate-500">
+                        Em breve
+                      </span>
+                    </button>
+                  );
+                }
+
+                return (
+                  <Link
+                    key={`mobile-${item.label}`}
+                    href={item.href}
+                    onClick={() => onClose?.()}
+                    className={`${className} relative`}
+                  >
+                    <Icon size={18} />
+                    <span>{item.label}</span>
+                    {item.href === "/feed" && comunicacaoNovidades > 0 ? (
+                      <span className="absolute bottom-1 left-2 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-bold leading-none text-white">
+                        {comunicacaoNovidades > 99 ? "99+" : comunicacaoNovidades}
+                      </span>
+                    ) : null}
+                    {item.href === "/financeiro" && financeiroNovidades > 0 ? (
+                      <span className="absolute bottom-1 left-2 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-bold leading-none text-white">
+                        {financeiroNovidades > 99 ? "99+" : financeiroNovidades}
+                      </span>
+                    ) : null}
+                  </Link>
+                );
+              })}
+            </nav>
+
+            <div className="space-y-3 p-4">
+              {user && (
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="w-full rounded-2xl border border-white/50 bg-white/65 px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-white"
+                >
+                  Sair
+                </button>
+              )}
+            </div>
+          </aside>
+        </div>
+      ) : null}
+    </>
   );
 }

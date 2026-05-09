@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import ProtectedRoute from "@/components/auth/protected-route";
 import Header from "@/components/layout/header";
 import Sidebar from "@/components/layout/sidebar";
@@ -11,8 +12,24 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isSocialImmersive =
     pathname === "/feed/rede-social" || pathname === "/feed/chat";
+
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [mobileMenuOpen]);
 
   return (
     <ProtectedRoute>
@@ -23,7 +40,12 @@ export default function DashboardLayout({
             : "min-h-screen lg:flex"
         }
       >
-        {!isSocialImmersive ? <Sidebar /> : null}
+        {!isSocialImmersive ? (
+          <Sidebar
+            mobileOpen={mobileMenuOpen}
+            onClose={() => setMobileMenuOpen(false)}
+          />
+        ) : null}
 
         <main className="relative flex-1 overflow-hidden">
           {!isSocialImmersive ? (
@@ -40,7 +62,9 @@ export default function DashboardLayout({
                 : "soft-container relative space-y-6 py-6 md:py-8"
             }
           >
-            {!isSocialImmersive ? <Header /> : null}
+            {!isSocialImmersive ? (
+              <Header onMenuToggle={() => setMobileMenuOpen(true)} />
+            ) : null}
             {children}
           </div>
         </main>

@@ -12,7 +12,7 @@ export default function PageHeader({
       <div className="pointer-events-none absolute inset-y-0 right-0 w-40 bg-gradient-to-l from-[rgba(142,185,173,0.12)] via-[rgba(216,141,98,0.08)] to-transparent" />
       <div className="relative">
         <div className="mb-3 inline-flex items-center rounded-full border border-[rgba(47,108,103,0.14)] bg-white/55 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.24em] text-[color:var(--primary)]">
-          EduConnect
+          GestClass
         </div>
         <h1 className="page-title text-3xl md:text-5xl font-bold leading-none">
           {title}
