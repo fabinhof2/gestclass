@@ -552,7 +552,119 @@ export default function SuperusuarioPage() {
                 Carregando painel global...
               </div>
             ) : (
-              <div className="mt-5 overflow-x-auto">
+              <>
+                <div className="mt-5 space-y-4 md:hidden">
+                  {filteredSchools.map((school) => {
+                    const isBusy = actionId === school.id;
+
+                    return (
+                      <article
+                        key={school.id}
+                        className={`rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm ${
+                          selectedSchoolId === school.id ? "ring-2 ring-blue-200" : ""
+                        }`}
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <p className="font-bold text-slate-900">{school.name}</p>
+                            <p className="mt-1 text-xs text-slate-500">
+                              {school.email || "E-mail não informado"}
+                            </p>
+                          </div>
+                          <span
+                            className={`shrink-0 rounded-full px-3 py-1 text-[11px] font-bold ring-1 ${statusClass(school.status)}`}
+                          >
+                            {school.status ? statusLabels[school.status] : "Sem status"}
+                          </span>
+                        </div>
+
+                        <dl className="mt-4 grid gap-3 text-sm text-slate-600">
+                          <div>
+                            <dt className="text-xs font-bold uppercase tracking-wide text-slate-400">
+                              Plano
+                            </dt>
+                            <dd className="mt-1 font-semibold text-slate-700">
+                              {school.plan ? planLabels[school.plan] : "Não definido"}
+                            </dd>
+                          </div>
+                          <div>
+                            <dt className="text-xs font-bold uppercase tracking-wide text-slate-400">
+                              Admin
+                            </dt>
+                            <dd className="mt-1">{getAdminName(school)}</dd>
+                          </div>
+                          <div>
+                            <dt className="text-xs font-bold uppercase tracking-wide text-slate-400">
+                              Avaliação
+                            </dt>
+                            <dd className="mt-1">
+                              {school.tipoAvaliacao || "BIMESTRAL"} · média {school.mediaAprovacao || 7}
+                            </dd>
+                          </div>
+                        </dl>
+
+                        <div className="mt-4 grid gap-2">
+                          <button
+                            type="button"
+                            onClick={() => startEdit(school)}
+                            className={`${secondaryActionClass} justify-center`}
+                          >
+                            <Pencil size={15} />
+                            Editar
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleSelectSchool(school)}
+                            className={`${secondaryActionClass} justify-center`}
+                          >
+                            <School size={15} />
+                            Selecionar
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleToggleBlockSchool(school)}
+                            disabled={isBusy}
+                            className={`${secondaryActionClass} justify-center`}
+                          >
+                            {school.status === "SUSPENSA" ? <Unlock size={15} /> : <Lock size={15} />}
+                            {school.status === "SUSPENSA" ? "Desbloquear" : "Bloquear"}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleEnterSchool(school)}
+                            disabled={isBusy}
+                            className={`${secondaryActionClass} justify-center`}
+                          >
+                            <ExternalLink size={15} />
+                            Acessar
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDownloadBackup(school)}
+                            disabled={isBusy}
+                            className={`${secondaryActionClass} justify-center`}
+                            title="Baixar backup completo da escola"
+                          >
+                            <Download size={15} />
+                            Backup
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteSchool(school)}
+                            disabled={isBusy}
+                            className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-red-200 bg-red-50 px-2.5 py-2 text-xs font-bold text-red-700 transition hover:bg-red-100 disabled:opacity-60"
+                            title="Excluir definitivamente a escola do banco de dados"
+                          >
+                            <Trash2 size={15} />
+                            Excluir
+                          </button>
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+
+                <div className="mt-5 hidden overflow-x-auto md:block">
                 <table className="w-full min-w-[1120px] text-left text-sm">
                   <thead className="text-xs uppercase text-slate-500">
                     <tr>
@@ -625,7 +737,8 @@ export default function SuperusuarioPage() {
                     })}
                   </tbody>
                 </table>
-              </div>
+                </div>
+              </>
             )}
           </div>
 
