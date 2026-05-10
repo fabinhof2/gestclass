@@ -363,7 +363,7 @@ export default function Sidebar({
   mobileOpen = false,
   onClose,
 }: SidebarProps) {
-  const { user, token, logout } = useAuth();
+  const { user, token, logout, selectedSchool } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
   const userId = user?.id;
@@ -373,6 +373,7 @@ export default function Sidebar({
   const isResponsavel = userRole === "RESPONSAVEL";
   const isFinanceiroResponsavelPlanEnabled =
     !userPlan || userPlan === "PRO" || userPlan === "PREMIUM";
+  const currentSchoolId = selectedSchool?.id || user?.schoolId || "";
   const canAccessFeed = useMemo(
     () =>
       userRole !== undefined &&
@@ -385,13 +386,18 @@ export default function Sidebar({
     Boolean(token) && isResponsavel && isFinanceiroResponsavelPlanEnabled;
 
   const [escolasAdmin, setEscolasAdmin] = useState<EscolaSidebar[]>([]);
+  const [activeSchool, setActiveSchool] = useState<EscolaSidebar | null>(null);
   const [comunicacaoNovidades, setComunicacaoNovidades] = useState(0);
   const [financeiroNovidades, setFinanceiroNovidades] = useState(0);
   const [financeiroResponsavelDisponivel, setFinanceiroResponsavelDisponivel] =
     useState(true);
   const [financeiroGestaoDisponivel, setFinanceiroGestaoDisponivel] =
     useState(true);
-  const sidebarLogoUrl = escolasAdmin[0]?.logoUrl || null;
+  const sidebarLogoUrl =
+    activeSchool?.logoUrl ||
+    selectedSchool?.logoUrl ||
+    escolasAdmin[0]?.logoUrl ||
+    null;
 
   useEffect(() => {
     async function fetchEscolasAdmin() {
@@ -418,6 +424,44 @@ export default function Sidebar({
 
     fetchEscolasAdmin();
   }, [token, isAdminEscola]);
+
+  useEffect(() => {
+    let ignore = false;
+
+    async function fetchActiveSchool() {
+      if (!token || !currentSchoolId) {
+        if (!ignore) {
+          setActiveSchool(null);
+        }
+        return;
+      }
+
+      try {
+        const response = await fetch(apiUrl("/schools"), {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "x-school-id": currentSchoolId,
+          },
+        });
+        const data = await readJson<EscolasResponse>(response);
+
+        if (!response.ok || ignore) return;
+
+        const schoolData = Array.isArray(data) ? data[0] : data;
+        setActiveSchool(schoolData || null);
+      } catch {
+        if (!ignore) {
+          setActiveSchool(null);
+        }
+      }
+    }
+
+    fetchActiveSchool();
+
+    return () => {
+      ignore = true;
+    };
+  }, [currentSchoolId, token]);
 
   useEffect(() => {
     let ignore = false;

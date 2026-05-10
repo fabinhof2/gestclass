@@ -35,6 +35,7 @@ type SchoolItem = {
   name: string;
   email?: string | null;
   phone?: string | null;
+  logoUrl?: string | null;
   status?: SchoolStatus | null;
   plan?: SchoolPlan | null;
   tipoAvaliacao?: TipoAvaliacao | null;
@@ -360,6 +361,7 @@ export default function SuperusuarioPage() {
       await enterSchoolAsAdmin({
         id: school.id,
         name: school.name,
+        logoUrl: school.logoUrl || undefined,
         status: school.status || undefined,
       });
       window.location.href = "/dashboard";
@@ -373,6 +375,7 @@ export default function SuperusuarioPage() {
     setSelectedSchool({
       id: school.id,
       name: school.name,
+      logoUrl: school.logoUrl || undefined,
       status: school.status || undefined,
     });
     setSelectedSchoolId(school.id);

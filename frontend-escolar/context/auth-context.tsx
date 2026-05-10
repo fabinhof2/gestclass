@@ -39,6 +39,7 @@ type SelectedSchool = {
   id: string;
   name: string;
   status?: string | null;
+  logoUrl?: string | null;
 };
 
 type LoginResponse = {

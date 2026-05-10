@@ -378,14 +378,17 @@ export default function Header({ onMenuToggle }: HeaderProps) {
   const userId = user?.id;
   const userRole = user?.role;
   const userPlan = user?.plan;
+  const currentSchoolId = selectedSchool?.id || user?.schoolId || "";
 
   const visibleSchool = user?.isSuperuserMaintenance
     ? {
-        id: selectedSchool?.id || user.schoolId || "",
+        id: currentSchoolId,
         name:
           selectedSchool?.name ||
+          school?.name ||
           user.maintenanceSchoolName ||
           "Escola em manutenção",
+        logoUrl: selectedSchool?.logoUrl || school?.logoUrl || null,
       }
     : user?.role === "SUPERUSUARIO"
       ? null
@@ -680,12 +683,7 @@ export default function Header({ onMenuToggle }: HeaderProps) {
     let ignore = false;
 
     async function fetchSchoolForHeader() {
-      if (
-        !token ||
-        !user ||
-        user.role === "SUPERUSUARIO" ||
-        user.isSuperuserMaintenance
-      ) {
+      if (!token || !user || user.role === "SUPERUSUARIO" || !currentSchoolId) {
         return;
       }
 
@@ -693,6 +691,7 @@ export default function Header({ onMenuToggle }: HeaderProps) {
         const response = await fetch(apiUrl("/schools"), {
           headers: {
             Authorization: `Bearer ${token}`,
+            "x-school-id": currentSchoolId,
           },
         });
 
@@ -716,7 +715,7 @@ export default function Header({ onMenuToggle }: HeaderProps) {
     return () => {
       ignore = true;
     };
-  }, [token, user]);
+  }, [currentSchoolId, token, user]);
 
   useEffect(() => {
     let ignore = false;
