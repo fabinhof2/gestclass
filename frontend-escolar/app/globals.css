@@ -240,3 +240,21 @@ textarea:focus {
     font-size: 1.25rem;
   }
 }
+
+.schedule-force-mobile-cards {
+  display: none;
+}
+
+.schedule-force-mobile-table {
+  display: block;
+}
+
+@media (max-width: 1024px) and (orientation: portrait) {
+  .schedule-force-mobile-cards {
+    display: block;
+  }
+
+  .schedule-force-mobile-table {
+    display: none;
+  }
+}

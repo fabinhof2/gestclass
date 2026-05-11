@@ -391,6 +391,7 @@ export default function ScheduleGrid({
   forceMobileLayout = false,
 }: ScheduleGridProps) {
   const [useMobileWeeklyLayout, setUseMobileWeeklyLayout] = useState(false);
+  const shouldForcePortraitMobile = forceMobileLayout && mode === "weekly";
 
   useEffect(() => {
     function syncScreenMode() {
@@ -598,114 +599,98 @@ export default function ScheduleGrid({
     );
   }
 
-  return (
-    <div className={`overflow-hidden border border-sky-200 bg-[linear-gradient(180deg,#fffdf8,#f6fbff)] shadow-[0_20px_50px_rgba(53,92,142,0.12)] ${compact ? "rounded-[1.5rem] p-3" : "rounded-[2rem] p-5"}`}>
-      <div className={`border border-sky-100 bg-white ${compact ? "rounded-[1.2rem] px-3 py-4" : "rounded-[1.6rem] px-5 py-6"}`}>
-        <div className="text-center">
-          <h3 className={`font-black tracking-wide ${compact ? "text-2xl md:text-4xl" : "text-3xl md:text-5xl"}`}>
-            <span className="text-blue-600">HORARIO</span>{" "}
-            <span className="text-emerald-600">DE</span>{" "}
-            <span className="text-red-500">AULA</span>{" "}
-            <span className="text-violet-600">SEMANAL</span>
-          </h3>
-          {subtitle || title ? (
-            <p className={`mt-2 font-bold text-slate-700 ${compact ? "text-xs md:text-sm" : "text-sm md:text-base"}`}>
-              {subtitle || title}
-            </p>
-          ) : null}
-          <div className="mx-auto mt-4 h-1 max-w-xl rounded-full bg-[linear-gradient(90deg,#5fbf72,#f2c94c,#f06b6b,#8f6fd5)]" />
-        </div>
+  const weeklyMobileContent = (
+    <div className="mt-6 space-y-4">
+      {DIAS.map((dia, dayIndex) => {
+        const palette = getDayPalette(dayIndex);
+        const turmasDoDia = visibleTurmas
+          .map((turma) => ({
+            turma,
+            aulas: getAulasDaTurmaNoDia(turma, dia.value, horarios, professorId),
+          }))
+          .filter((item) => item.aulas.length > 0);
 
-        {forceMobileLayout || useMobileWeeklyLayout ? (
-          <div className="mt-6 space-y-4">
-          {DIAS.map((dia, dayIndex) => {
-            const palette = getDayPalette(dayIndex);
-            const turmasDoDia = visibleTurmas
-              .map((turma) => ({
-                turma,
-                aulas: getAulasDaTurmaNoDia(turma, dia.value, horarios, professorId),
-              }))
-              .filter((item) => item.aulas.length > 0);
-
-            return (
-              <section
-                key={`mobile-weekly-${dia.value}`}
-                className={`rounded-[1.4rem] border p-3 ${palette.cell}`}
+        return (
+          <section
+            key={`mobile-weekly-${dia.value}`}
+            className={`rounded-[1.4rem] border p-3 ${palette.cell}`}
+          >
+            <div className="mb-3 flex items-center justify-between gap-2">
+              <h4 className={`text-base font-black ${palette.title}`}>
+                {dia.label}
+              </h4>
+              <span
+                className={`rounded-full border px-3 py-1 text-[11px] font-black ${palette.badge}`}
               >
-                <div className="mb-3 flex items-center justify-between gap-2">
-                  <h4 className={`text-base font-black ${palette.title}`}>
-                    {dia.label}
-                  </h4>
-                  <span
-                    className={`rounded-full border px-3 py-1 text-[11px] font-black ${palette.badge}`}
+                {turmasDoDia.length} turma(s)
+              </span>
+            </div>
+
+            {turmasDoDia.length === 0 ? (
+              <div className="rounded-xl border border-dashed border-slate-300 bg-white/75 p-4 text-center text-sm font-semibold text-slate-500">
+                Nenhuma aula neste dia.
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {turmasDoDia.map(({ turma, aulas }) => (
+                  <article
+                    key={`mobile-weekly-${dia.value}-${getContextKey(turma)}`}
+                    className="rounded-[1.2rem] border border-white/70 bg-white/90 p-3 shadow-[0_10px_24px_rgba(148,163,184,0.12)]"
                   >
-                    {turmasDoDia.length} turma(s)
-                  </span>
-                </div>
+                    <div className="border-b border-slate-200 pb-3">
+                      <TurmaCell turma={turma} compact />
+                    </div>
 
-                {turmasDoDia.length === 0 ? (
-                  <div className="rounded-xl border border-dashed border-slate-300 bg-white/75 p-4 text-center text-sm font-semibold text-slate-500">
-                    Nenhuma aula neste dia.
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {turmasDoDia.map(({ turma, aulas }) => (
-                      <article
-                        key={`mobile-weekly-${dia.value}-${getContextKey(turma)}`}
-                        className="rounded-[1.2rem] border border-white/70 bg-white/90 p-3 shadow-[0_10px_24px_rgba(148,163,184,0.12)]"
-                      >
-                        <div className="border-b border-slate-200 pb-3">
-                          <TurmaCell turma={turma} compact />
-                        </div>
+                    <div className="mt-3 space-y-2">
+                      {aulas.map(({ horario, aula }) => {
+                        const professorStyle = getProfessorColorStyle(
+                          professorColors,
+                          {
+                            id: aula.turmaProfessor?.professor?.id,
+                            name: aula.turmaProfessor?.professor?.name,
+                          },
+                          { isIntervalo: !aula.turmaProfessorId },
+                        );
 
-                        <div className="mt-3 space-y-2">
-                          {aulas.map(({ horario, aula }) => {
-                            const professorStyle = getProfessorColorStyle(
-                              professorColors,
-                              {
-                                id: aula.turmaProfessor?.professor?.id,
-                                name: aula.turmaProfessor?.professor?.name,
-                              },
-                              { isIntervalo: !aula.turmaProfessorId },
-                            );
-
-                            return (
-                              <div
-                                key={`mobile-weekly-${getContextKey(turma)}-${dia.value}-${horario.inicio}-${horario.fim}`}
-                                className="rounded-xl border px-3 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.55)]"
-                                style={professorStyle}
-                              >
-                                <div className="flex items-start justify-between gap-3">
-                                  <div className="min-w-0">
-                                    <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
-                                      {horario.inicio} - {horario.fim}
-                                    </p>
-                                    <p className="mt-1 text-sm font-black leading-tight text-slate-900">
-                                      {getAulaDisciplina(aula)}
-                                    </p>
-                                    <p className="mt-1 text-xs font-semibold leading-5 text-slate-600">
-                                      {getAulaProfessor(aula)}
-                                    </p>
-                                  </div>
-                                  <span className="shrink-0 rounded-full border border-white/70 bg-white/60 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-600">
-                                    Aula
-                                  </span>
-                                </div>
+                        return (
+                          <div
+                            key={`mobile-weekly-${getContextKey(turma)}-${dia.value}-${horario.inicio}-${horario.fim}`}
+                            className="rounded-xl border px-3 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.55)]"
+                            style={professorStyle}
+                          >
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="min-w-0">
+                                <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
+                                  {horario.inicio} - {horario.fim}
+                                </p>
+                                <p className="mt-1 text-sm font-black leading-tight text-slate-900">
+                                  {getAulaDisciplina(aula)}
+                                </p>
+                                <p className="mt-1 text-xs font-semibold leading-5 text-slate-600">
+                                  {getAulaProfessor(aula)}
+                                </p>
                               </div>
-                            );
-                          })}
-                        </div>
-                      </article>
-                    ))}
-                  </div>
-                )}
-              </section>
-            );
-          })}
-          </div>
-        ) : (
-        <div className="mt-6 overflow-x-auto">
-          <table className={`w-full table-fixed border-separate border-spacing-0 ${compact ? "min-w-[1260px] text-[10px]" : "min-w-[1680px] text-[11px]"}`}>
+                              <span className="shrink-0 rounded-full border border-white/70 bg-white/60 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-600">
+                                Aula
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+          </section>
+        );
+      })}
+    </div>
+  );
+
+  const weeklyTableContent = (
+    <div className="mt-6 overflow-x-auto">
+      <table className={`w-full table-fixed border-separate border-spacing-0 ${compact ? "min-w-[1260px] text-[10px]" : "min-w-[1680px] text-[11px]"}`}>
             <colgroup>
               <col className={compact ? "w-[170px]" : "w-[220px]"} />
               {DIAS.flatMap((dia) =>
@@ -809,8 +794,37 @@ export default function ScheduleGrid({
                 </tr>
               ))}
             </tbody>
-          </table>
+      </table>
+    </div>
+  );
+
+  return (
+    <div className={`overflow-hidden border border-sky-200 bg-[linear-gradient(180deg,#fffdf8,#f6fbff)] shadow-[0_20px_50px_rgba(53,92,142,0.12)] ${compact ? "rounded-[1.5rem] p-3" : "rounded-[2rem] p-5"}`}>
+      <div className={`border border-sky-100 bg-white ${compact ? "rounded-[1.2rem] px-3 py-4" : "rounded-[1.6rem] px-5 py-6"}`}>
+        <div className="text-center">
+          <h3 className={`font-black tracking-wide ${compact ? "text-2xl md:text-4xl" : "text-3xl md:text-5xl"}`}>
+            <span className="text-blue-600">HORARIO</span>{" "}
+            <span className="text-emerald-600">DE</span>{" "}
+            <span className="text-red-500">AULA</span>{" "}
+            <span className="text-violet-600">SEMANAL</span>
+          </h3>
+          {subtitle || title ? (
+            <p className={`mt-2 font-bold text-slate-700 ${compact ? "text-xs md:text-sm" : "text-sm md:text-base"}`}>
+              {subtitle || title}
+            </p>
+          ) : null}
+          <div className="mx-auto mt-4 h-1 max-w-xl rounded-full bg-[linear-gradient(90deg,#5fbf72,#f2c94c,#f06b6b,#8f6fd5)]" />
         </div>
+
+        {shouldForcePortraitMobile ? (
+          <div className="schedule-force-mobile">
+            <div className="schedule-force-mobile-cards">{weeklyMobileContent}</div>
+            <div className="schedule-force-mobile-table">{weeklyTableContent}</div>
+          </div>
+        ) : forceMobileLayout || useMobileWeeklyLayout ? (
+          weeklyMobileContent
+        ) : (
+          weeklyTableContent
         )}
 
         <div className="mt-6 rounded-[1.4rem] border-2 border-dashed border-orange-200 bg-white px-5 py-4">
