@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useMemo } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import {
   buildProfessorColorMap,
   getProfessorColorStyle,
@@ -388,6 +388,21 @@ export default function ScheduleGrid({
   emptyMessage = "Nenhuma aula cadastrada para montar a grade.",
   compact = false,
 }: ScheduleGridProps) {
+  const [isNarrowScreen, setIsNarrowScreen] = useState(false);
+
+  useEffect(() => {
+    function syncScreenMode() {
+      setIsNarrowScreen(window.innerWidth < 820);
+    }
+
+    syncScreenMode();
+    window.addEventListener("resize", syncScreenMode);
+
+    return () => {
+      window.removeEventListener("resize", syncScreenMode);
+    };
+  }, []);
+
   const visibleTurmas = useMemo(
     () =>
       (professorId
@@ -591,7 +606,8 @@ export default function ScheduleGrid({
           <div className="mx-auto mt-4 h-1 max-w-xl rounded-full bg-[linear-gradient(90deg,#5fbf72,#f2c94c,#f06b6b,#8f6fd5)]" />
         </div>
 
-        <div className="mt-6 space-y-4 md:hidden">
+        {isNarrowScreen ? (
+          <div className="mt-6 space-y-4">
           {DIAS.map((dia, dayIndex) => {
             const palette = getDayPalette(dayIndex);
             const turmasDoDia = visibleTurmas
@@ -676,9 +692,9 @@ export default function ScheduleGrid({
               </section>
             );
           })}
-        </div>
-
-        <div className="mt-6 hidden overflow-x-auto md:block">
+          </div>
+        ) : (
+        <div className="mt-6 overflow-x-auto">
           <table className={`w-full table-fixed border-separate border-spacing-0 ${compact ? "min-w-[1260px] text-[10px]" : "min-w-[1680px] text-[11px]"}`}>
             <colgroup>
               <col className={compact ? "w-[170px]" : "w-[220px]"} />
@@ -785,6 +801,7 @@ export default function ScheduleGrid({
             </tbody>
           </table>
         </div>
+        )}
 
         <div className="mt-6 rounded-[1.4rem] border-2 border-dashed border-orange-200 bg-white px-5 py-4">
           <div className="flex items-center gap-3">
