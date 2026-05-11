@@ -388,18 +388,26 @@ export default function ScheduleGrid({
   emptyMessage = "Nenhuma aula cadastrada para montar a grade.",
   compact = false,
 }: ScheduleGridProps) {
-  const [isNarrowScreen, setIsNarrowScreen] = useState(false);
+  const [useMobileWeeklyLayout, setUseMobileWeeklyLayout] = useState(false);
 
   useEffect(() => {
     function syncScreenMode() {
-      setIsNarrowScreen(window.innerWidth < 820);
+      const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+      const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
+      const isPhoneLikeWidth = window.innerWidth < 1024;
+
+      setUseMobileWeeklyLayout(
+        (isTouchDevice && isPortrait) || window.innerWidth < 820 || isPhoneLikeWidth,
+      );
     }
 
     syncScreenMode();
     window.addEventListener("resize", syncScreenMode);
+    window.addEventListener("orientationchange", syncScreenMode);
 
     return () => {
       window.removeEventListener("resize", syncScreenMode);
+      window.removeEventListener("orientationchange", syncScreenMode);
     };
   }, []);
 
@@ -606,7 +614,7 @@ export default function ScheduleGrid({
           <div className="mx-auto mt-4 h-1 max-w-xl rounded-full bg-[linear-gradient(90deg,#5fbf72,#f2c94c,#f06b6b,#8f6fd5)]" />
         </div>
 
-        {isNarrowScreen ? (
+        {useMobileWeeklyLayout ? (
           <div className="mt-6 space-y-4">
           {DIAS.map((dia, dayIndex) => {
             const palette = getDayPalette(dayIndex);
