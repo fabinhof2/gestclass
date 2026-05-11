@@ -933,19 +933,19 @@ export default function Header({ onMenuToggle }: HeaderProps) {
   }, [searchOpen]);
 
   return (
-    <header className="glass-panel relative z-[120] flex flex-col gap-4 overflow-visible rounded-[1.75rem] border border-white/40 px-4 py-4 shadow-[0_18px_44px_rgba(74,93,110,0.08)] md:flex-row md:items-center md:justify-between md:px-5">
-      <div className="flex items-center gap-3">
+    <header className="glass-panel relative z-[120] grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4 overflow-visible rounded-[1.75rem] border border-white/40 px-4 py-4 shadow-[0_18px_44px_rgba(74,93,110,0.08)] md:flex md:items-center md:justify-between md:px-5">
+      <div className="flex min-w-0 items-center gap-3">
         <button
           type="button"
           onClick={onMenuToggle}
-          className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/45 bg-white/78 shadow-[0_12px_26px_rgba(85,103,120,0.08)] lg:hidden"
+          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/45 bg-white/78 shadow-[0_12px_26px_rgba(85,103,120,0.08)] lg:hidden"
           title="Abrir menu"
         >
           <Menu size={18} />
         </button>
 
         {user?.role !== "SUPERUSUARIO" ? (
-          <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl border border-white/50 bg-white/90 p-1 shadow-[0_10px_24px_rgba(92,109,126,0.12)]">
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-white/50 bg-white/90 p-1 shadow-[0_10px_24px_rgba(92,109,126,0.12)]">
             {visibleSchool?.logoUrl ? (
               <img
                 src={apiUrl(visibleSchool.logoUrl)}
@@ -958,8 +958,8 @@ export default function Header({ onMenuToggle }: HeaderProps) {
           </div>
         ) : null}
 
-        <div>
-          <h2 className="page-title text-3xl font-bold leading-none">
+        <div className="min-w-0">
+          <h2 className="page-title truncate text-[2.15rem] font-bold leading-none sm:text-3xl">
             Olá, {getNome()} 👋
           </h2>
 
@@ -977,7 +977,7 @@ export default function Header({ onMenuToggle }: HeaderProps) {
         </div>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex flex-col-reverse items-end gap-3 justify-self-end md:flex-row md:items-center">
         {user?.isSuperuserMaintenance ? (
           <button
             type="button"
@@ -1069,7 +1069,7 @@ export default function Header({ onMenuToggle }: HeaderProps) {
           </button>
 
           {notificationsOpen ? (
-            <div className="absolute right-0 top-14 z-[130] w-80 overflow-hidden rounded-[1.5rem] border border-white/45 bg-[rgba(255,252,247,0.94)] shadow-[0_22px_50px_rgba(62,78,92,0.14)] backdrop-blur-xl">
+            <div className="absolute right-0 top-14 z-[130] w-80 max-w-[calc(100vw-2rem)] overflow-hidden rounded-[1.5rem] border border-white/45 bg-[rgba(255,252,247,0.94)] shadow-[0_22px_50px_rgba(62,78,92,0.14)] backdrop-blur-xl">
               <div className="border-b border-white/55 px-4 py-3">
                 <p className="text-sm font-bold text-slate-900">
                   Notificações
