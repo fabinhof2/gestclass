@@ -959,7 +959,7 @@ export default function Header({ onMenuToggle }: HeaderProps) {
         ) : null}
 
         <div className="min-w-0">
-          <h2 className="page-title truncate text-[2.15rem] font-bold leading-none sm:text-3xl">
+          <h2 className="page-title text-[1.9rem] font-bold leading-[0.95] sm:text-3xl sm:leading-none">
             Olá, {getNome()} 👋
           </h2>
 
