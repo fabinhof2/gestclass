@@ -56,6 +56,7 @@ type ScheduleGridProps = {
   subtitle?: string;
   emptyMessage?: string;
   compact?: boolean;
+  forceMobileLayout?: boolean;
 };
 
 type DiaSemana = "SEG" | "TER" | "QUA" | "QUI" | "SEX";
@@ -387,6 +388,7 @@ export default function ScheduleGrid({
   subtitle,
   emptyMessage = "Nenhuma aula cadastrada para montar a grade.",
   compact = false,
+  forceMobileLayout = false,
 }: ScheduleGridProps) {
   const [useMobileWeeklyLayout, setUseMobileWeeklyLayout] = useState(false);
 
@@ -614,7 +616,7 @@ export default function ScheduleGrid({
           <div className="mx-auto mt-4 h-1 max-w-xl rounded-full bg-[linear-gradient(90deg,#5fbf72,#f2c94c,#f06b6b,#8f6fd5)]" />
         </div>
 
-        {useMobileWeeklyLayout ? (
+        {forceMobileLayout || useMobileWeeklyLayout ? (
           <div className="mt-6 space-y-4">
           {DIAS.map((dia, dayIndex) => {
             const palette = getDayPalette(dayIndex);

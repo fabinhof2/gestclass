@@ -1871,6 +1871,10 @@ export default function HorariosPage() {
           title={GRADE_LABELS[gradeTipo]}
           subtitle={gradeSubtitle}
           compact={canManageSchedule}
+          forceMobileLayout={
+            gradeTipo === "SEMANAL" &&
+            (user?.role === "ALUNO" || user?.role === "RESPONSAVEL")
+          }
           emptyMessage={
             gradeTipo === "PROFESSOR"
               ? "Nenhuma aula encontrada para este professor."

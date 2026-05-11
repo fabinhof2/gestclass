@@ -40,14 +40,14 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="relative min-h-[100dvh] overflow-x-hidden bg-[linear-gradient(135deg,#eef4ff_0%,#f6f9ff_46%,#dfeaff_100%)] px-3 py-4 sm:px-6 sm:py-6 lg:px-8">
+    <main className="relative min-h-screen overflow-x-hidden bg-[linear-gradient(135deg,#eef4ff_0%,#f6f9ff_46%,#dfeaff_100%)] px-4 py-6 sm:px-6 lg:px-8">
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute left-[-4rem] top-[-2rem] h-40 w-40 rounded-full bg-[rgba(59,130,246,0.16)] blur-3xl sm:h-56 sm:w-56" />
         <div className="absolute bottom-[-3rem] right-[-2rem] h-52 w-52 rounded-full bg-[rgba(96,165,250,0.2)] blur-3xl sm:h-72 sm:w-72" />
       </div>
 
-      <div className="relative mx-auto flex min-h-[calc(100dvh-2rem)] w-full max-w-6xl items-center justify-center sm:min-h-[calc(100dvh-3rem)]">
-        <div className="grid w-full max-w-5xl items-stretch overflow-hidden rounded-[1.5rem] border border-white/50 bg-[rgba(255,252,247,0.74)] shadow-[0_24px_70px_rgba(73,92,111,0.14)] backdrop-blur-xl sm:rounded-[2rem] lg:grid-cols-[minmax(0,1.1fr)_minmax(320px,420px)]">
+      <div className="relative mx-auto flex min-h-[calc(100vh-3rem)] w-full max-w-6xl items-center justify-center">
+        <div className="grid w-full max-w-5xl items-stretch overflow-hidden rounded-[2rem] border border-white/50 bg-[rgba(255,252,247,0.74)] shadow-[0_24px_70px_rgba(73,92,111,0.14)] backdrop-blur-xl lg:grid-cols-[minmax(0,1.1fr)_minmax(320px,420px)]">
           <section className="hidden min-w-0 flex-col justify-between bg-[linear-gradient(160deg,rgba(30,64,175,0.97),rgba(37,99,235,0.99))] px-8 py-10 text-white lg:flex xl:px-10">
             <div>
               <div className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.24em] text-white/85">
@@ -76,17 +76,17 @@ export default function LoginPage() {
             </div>
           </section>
 
-          <section className="min-w-0 px-4 py-5 sm:px-8 sm:py-8 lg:px-10 lg:py-10">
+          <section className="min-w-0 px-5 py-6 sm:px-8 sm:py-8 lg:px-10 lg:py-10">
             <div className="mx-auto flex w-full max-w-md flex-col">
               <div className="text-center lg:text-left">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-[1.2rem] bg-[linear-gradient(135deg,#2563eb,#60a5fa)] text-lg font-black text-white shadow-[0_18px_32px_rgba(37,99,235,0.28)] sm:h-16 sm:w-16 sm:rounded-[1.4rem] sm:text-xl lg:mx-0">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-[1.4rem] bg-[linear-gradient(135deg,#2563eb,#60a5fa)] text-xl font-black text-white shadow-[0_18px_32px_rgba(37,99,235,0.28)] lg:mx-0">
                   GC
                 </div>
 
                 <p className="mt-5 text-xs font-bold uppercase tracking-[0.28em] text-[color:var(--primary)]">
                   GestClass
                 </p>
-                <h2 className="mt-2 font-[var(--font-display)] text-[2rem] font-bold tracking-[-0.04em] text-slate-900 sm:text-4xl">
+                <h2 className="mt-2 font-[var(--font-display)] text-4xl font-bold tracking-[-0.04em] text-slate-900">
                   Entrar na plataforma
                 </h2>
                 <p className="mt-3 text-sm leading-6 text-slate-500">
@@ -94,7 +94,7 @@ export default function LoginPage() {
                 </p>
               </div>
 
-              <form onSubmit={handleLogin} className="mt-6 space-y-4 sm:mt-8">
+              <form onSubmit={handleLogin} className="mt-8 space-y-4">
                 <label className="block">
                   <span className="mb-2 block text-sm font-bold text-slate-700">
                     Identificação
@@ -143,7 +143,7 @@ export default function LoginPage() {
                 </button>
               </form>
 
-              <div className="mt-5 rounded-2xl border border-[rgba(37,99,235,0.12)] bg-[rgba(255,255,255,0.72)] px-4 py-4 text-sm text-slate-600 sm:mt-6">
+              <div className="mt-6 rounded-2xl border border-[rgba(37,99,235,0.12)] bg-[rgba(255,255,255,0.72)] px-4 py-4 text-sm text-slate-600">
                 <p className="font-semibold text-slate-800">Acesso protegido por perfil</p>
                 <p className="mt-1 leading-6">
                   O sistema direciona automaticamente cada usuário para a área correta após o login.
