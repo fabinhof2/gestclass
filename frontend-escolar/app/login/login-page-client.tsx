@@ -130,6 +130,85 @@ export default function LoginPageClient() {
 
   return (
     <main style={pageStyle}>
+      <style>
+        {`
+          .login-shell {
+            position: relative;
+            margin: 0 auto;
+            max-width: 1100px;
+            min-height: calc(100vh - 48px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .login-card {
+            width: 100%;
+            max-width: 980px;
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(320px, 420px);
+            overflow: hidden;
+            border-radius: 32px;
+            border: 1px solid rgba(255,255,255,0.5);
+            background: rgba(255, 252, 247, 0.82);
+            box-shadow: 0 24px 70px rgba(73,92,111,0.14);
+            backdrop-filter: blur(18px);
+          }
+
+          .login-hero {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 40px 32px;
+            color: #fff;
+            background: linear-gradient(160deg, rgba(30,64,175,0.97), rgba(37,99,235,0.99));
+          }
+
+          .login-form-wrap {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-width: 0;
+          }
+
+          .login-title {
+            margin-top: 8px;
+            margin-bottom: 0;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            color: #0f172a;
+            line-height: 0.95;
+          }
+
+          @media (max-width: 767px) {
+            .login-shell {
+              min-height: auto;
+              align-items: stretch;
+            }
+
+            .login-card {
+              grid-template-columns: minmax(0, 1fr);
+              border-radius: 24px;
+            }
+
+            .login-hero {
+              display: none;
+            }
+
+            .login-form-wrap {
+              padding: 28px 20px;
+            }
+
+            .login-title {
+              font-size: 34px;
+              line-height: 1;
+            }
+          }
+        `}
+      </style>
       <div aria-hidden style={{ pointerEvents: "none", position: "absolute", inset: 0 }}>
         <div
           style={{
@@ -157,15 +236,9 @@ export default function LoginPageClient() {
         />
       </div>
 
-      <div style={shellStyle}>
-        <div
-          style={cardStyle}
-        >
-          <section
-            style={{
-              ...heroStyle,
-            }}
-          >
+      <div className="login-shell" style={shellStyle}>
+        <div className="login-card" style={{ ...cardStyle, gridTemplateColumns: undefined }}>
+          <section className="login-hero" style={{ ...heroStyle, display: undefined, flexDirection: undefined, justifyContent: undefined, padding: undefined, background: undefined }}>
             <div>
               <div
                 style={{
@@ -225,7 +298,7 @@ export default function LoginPageClient() {
             </div>
           </section>
 
-          <section style={formWrapStyle}>
+          <section className="login-form-wrap" style={{ ...formWrapStyle, padding: undefined, display: undefined, flexDirection: undefined, justifyContent: undefined }}>
             <div style={{ margin: "0 auto", display: "flex", width: "100%", maxWidth: "420px", flexDirection: "column" }}>
               <div>
                 <div
@@ -249,17 +322,7 @@ export default function LoginPageClient() {
                 <p style={{ marginTop: "20px", fontSize: "12px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.28em", color: "#2f6c67" }}>
                   GestClass
                 </p>
-                <h2
-                  style={{
-                    marginTop: "8px",
-                    marginBottom: 0,
-                    fontFamily: 'Georgia, "Times New Roman", serif',
-                    fontSize: "48px",
-                    fontWeight: 700,
-                    letterSpacing: "-0.04em",
-                    color: "#0f172a",
-                  }}
-                >
+                <h2 className="login-title">
                   Entrar na plataforma
                 </h2>
                 <p style={{ marginTop: "12px", fontSize: "14px", lineHeight: 1.7, color: "#64748b" }}>
