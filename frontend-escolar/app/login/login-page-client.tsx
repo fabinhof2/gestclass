@@ -39,30 +39,179 @@ export default function LoginPageClient() {
     }
   }
 
+  const pageStyle: React.CSSProperties = {
+    minHeight: "100vh",
+    padding: "24px 16px",
+    background:
+      "linear-gradient(135deg, rgb(238, 244, 255) 0%, rgb(246, 249, 255) 46%, rgb(223, 234, 255) 100%)",
+    position: "relative",
+    overflowX: "hidden",
+    fontFamily: '"Segoe UI", "Inter", sans-serif',
+  };
+
+  const shellStyle: React.CSSProperties = {
+    position: "relative",
+    margin: "0 auto",
+    maxWidth: "1100px",
+    minHeight: "calc(100vh - 48px)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  };
+
+  const cardStyle: React.CSSProperties = {
+    width: "100%",
+    maxWidth: "980px",
+    display: "grid",
+    gridTemplateColumns: "minmax(0, 1.1fr) minmax(320px, 420px)",
+    overflow: "hidden",
+    borderRadius: "32px",
+    border: "1px solid rgba(255,255,255,0.5)",
+    background: "rgba(255, 252, 247, 0.82)",
+    boxShadow: "0 24px 70px rgba(73,92,111,0.14)",
+    backdropFilter: "blur(18px)",
+  };
+
+  const heroStyle: React.CSSProperties = {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    padding: "40px 32px",
+    color: "#fff",
+    background:
+      "linear-gradient(160deg, rgba(30,64,175,0.97), rgba(37,99,235,0.99))",
+  };
+
+  const formWrapStyle: React.CSSProperties = {
+    padding: "40px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    minWidth: 0,
+  };
+
+  const inputRowStyle: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    gap: "12px",
+    borderRadius: "18px",
+    border: "1px solid rgb(226,232,240)",
+    background: "rgba(255,255,255,0.92)",
+    padding: "14px 16px",
+    boxShadow: "0 1px 2px rgba(15,23,42,0.06)",
+  };
+
+  const inputStyle: React.CSSProperties = {
+    width: "100%",
+    border: "none",
+    outline: "none",
+    background: "transparent",
+    fontSize: "14px",
+    color: "#1e293b",
+  };
+
+  const primaryButtonStyle: React.CSSProperties = {
+    width: "100%",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "8px",
+    border: "none",
+    borderRadius: "18px",
+    background: "linear-gradient(135deg,#2563eb,#1d4ed8)",
+    padding: "14px 16px",
+    color: "#fff",
+    fontSize: "14px",
+    fontWeight: 700,
+    boxShadow: "0 18px 30px rgba(37,99,235,0.24)",
+    cursor: loading ? "not-allowed" : "pointer",
+    opacity: loading ? 0.6 : 1,
+  };
+
   return (
-    <main className="relative min-h-screen overflow-x-hidden bg-[linear-gradient(135deg,#eef4ff_0%,#f6f9ff_46%,#dfeaff_100%)] px-4 py-6 sm:px-6 lg:px-8">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-[-4rem] top-[-2rem] h-40 w-40 rounded-full bg-[rgba(59,130,246,0.16)] blur-3xl sm:h-56 sm:w-56" />
-        <div className="absolute bottom-[-3rem] right-[-2rem] h-52 w-52 rounded-full bg-[rgba(96,165,250,0.2)] blur-3xl sm:h-72 sm:w-72" />
+    <main style={pageStyle}>
+      <div aria-hidden style={{ pointerEvents: "none", position: "absolute", inset: 0 }}>
+        <div
+          style={{
+            position: "absolute",
+            left: "-64px",
+            top: "-32px",
+            width: "224px",
+            height: "224px",
+            borderRadius: "999px",
+            background: "rgba(59,130,246,0.16)",
+            filter: "blur(56px)",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            right: "-32px",
+            bottom: "-48px",
+            width: "288px",
+            height: "288px",
+            borderRadius: "999px",
+            background: "rgba(96,165,250,0.2)",
+            filter: "blur(64px)",
+          }}
+        />
       </div>
 
-      <div className="relative mx-auto flex min-h-[calc(100vh-3rem)] w-full max-w-6xl items-center justify-center">
-        <div className="grid w-full max-w-5xl items-stretch overflow-hidden rounded-[2rem] border border-white/50 bg-[rgba(255,252,247,0.74)] shadow-[0_24px_70px_rgba(73,92,111,0.14)] backdrop-blur-xl lg:grid-cols-[minmax(0,1.1fr)_minmax(320px,420px)]">
-          <section className="hidden min-w-0 flex-col justify-between bg-[linear-gradient(160deg,rgba(30,64,175,0.97),rgba(37,99,235,0.99))] px-8 py-10 text-white lg:flex xl:px-10">
+      <div style={shellStyle}>
+        <div
+          style={cardStyle}
+        >
+          <section
+            style={{
+              ...heroStyle,
+            }}
+          >
             <div>
-              <div className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.24em] text-white/85">
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  borderRadius: "999px",
+                  border: "1px solid rgba(255,255,255,0.2)",
+                  background: "rgba(255,255,255,0.1)",
+                  padding: "6px 12px",
+                  fontSize: "11px",
+                  fontWeight: 700,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.24em",
+                  color: "rgba(255,255,255,0.85)",
+                }}
+              >
                 GestClass
               </div>
-              <h1 className="mt-6 font-[var(--font-display)] text-5xl font-bold leading-none tracking-[-0.04em]">
+              <h1
+                style={{
+                  marginTop: "24px",
+                  fontFamily: 'Georgia, "Times New Roman", serif',
+                  fontSize: "56px",
+                  fontWeight: 700,
+                  lineHeight: 1,
+                  letterSpacing: "-0.04em",
+                  marginBottom: 0,
+                }}
+              >
                 Gestão escolar com acesso claro em qualquer tela.
               </h1>
-              <p className="mt-5 max-w-xl text-base leading-7 text-white/78">
+              <p
+                style={{
+                  marginTop: "20px",
+                  maxWidth: "520px",
+                  fontSize: "16px",
+                  lineHeight: 1.75,
+                  color: "rgba(255,255,255,0.78)",
+                }}
+              >
                 Entre na sua plataforma para acompanhar escolas, turmas, comunicação,
                 notas e rotinas administrativas com uma experiência mais organizada.
               </p>
             </div>
 
-            <div className="grid gap-4">
+            <div style={{ display: "grid", gap: "16px" }}>
               <FeatureItem
                 icon={ShieldCheck}
                 title="Acesso por perfil"
@@ -76,59 +225,83 @@ export default function LoginPageClient() {
             </div>
           </section>
 
-          <section className="min-w-0 px-5 py-6 sm:px-8 sm:py-8 lg:px-10 lg:py-10">
-            <div className="mx-auto flex w-full max-w-md flex-col">
-              <div className="text-center lg:text-left">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-[1.4rem] bg-[linear-gradient(135deg,#2563eb,#60a5fa)] text-xl font-black text-white shadow-[0_18px_32px_rgba(37,99,235,0.28)] lg:mx-0">
+          <section style={formWrapStyle}>
+            <div style={{ margin: "0 auto", display: "flex", width: "100%", maxWidth: "420px", flexDirection: "column" }}>
+              <div>
+                <div
+                  style={{
+                    display: "flex",
+                    width: "64px",
+                    height: "64px",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: "22px",
+                    background: "linear-gradient(135deg,#2563eb,#60a5fa)",
+                    color: "#fff",
+                    fontSize: "20px",
+                    fontWeight: 900,
+                    boxShadow: "0 18px 32px rgba(37,99,235,0.28)",
+                  }}
+                >
                   GC
                 </div>
 
-                <p className="mt-5 text-xs font-bold uppercase tracking-[0.28em] text-[color:var(--primary)]">
+                <p style={{ marginTop: "20px", fontSize: "12px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.28em", color: "#2f6c67" }}>
                   GestClass
                 </p>
-                <h2 className="mt-2 font-[var(--font-display)] text-4xl font-bold tracking-[-0.04em] text-slate-900">
+                <h2
+                  style={{
+                    marginTop: "8px",
+                    marginBottom: 0,
+                    fontFamily: 'Georgia, "Times New Roman", serif',
+                    fontSize: "48px",
+                    fontWeight: 700,
+                    letterSpacing: "-0.04em",
+                    color: "#0f172a",
+                  }}
+                >
                   Entrar na plataforma
                 </h2>
-                <p className="mt-3 text-sm leading-6 text-slate-500">
+                <p style={{ marginTop: "12px", fontSize: "14px", lineHeight: 1.7, color: "#64748b" }}>
                   Use seu e-mail, CPF ou usuário para acessar o painel da escola.
                 </p>
               </div>
 
-              <form onSubmit={handleLogin} className="mt-8 space-y-4">
-                <label className="block">
-                  <span className="mb-2 block text-sm font-bold text-slate-700">
+              <form onSubmit={handleLogin} style={{ marginTop: "32px", display: "grid", gap: "16px" }}>
+                <label style={{ display: "block" }}>
+                  <span style={{ display: "block", marginBottom: "8px", fontSize: "14px", fontWeight: 700, color: "#334155" }}>
                     Identificação
                   </span>
-                  <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white/90 px-4 py-3 shadow-sm">
-                    <UserRound size={18} className="shrink-0 text-slate-400" />
+                  <div style={inputRowStyle}>
+                    <UserRound size={18} style={{ flexShrink: 0, color: "#94a3b8" }} />
                     <input
                       type="text"
                       placeholder="E-mail, CPF ou usuário"
                       value={identifier}
                       onChange={(e) => setIdentifier(e.target.value)}
-                      className="block w-full min-w-0 bg-transparent text-sm text-slate-800 outline-none placeholder:text-slate-400"
+                      style={inputStyle}
                     />
                   </div>
                 </label>
 
-                <label className="block">
-                  <span className="mb-2 block text-sm font-bold text-slate-700">
+                <label style={{ display: "block" }}>
+                  <span style={{ display: "block", marginBottom: "8px", fontSize: "14px", fontWeight: 700, color: "#334155" }}>
                     Senha
                   </span>
-                  <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white/90 px-4 py-3 shadow-sm">
-                    <KeyRound size={18} className="shrink-0 text-slate-400" />
+                  <div style={inputRowStyle}>
+                    <KeyRound size={18} style={{ flexShrink: 0, color: "#94a3b8" }} />
                     <input
                       type="password"
                       placeholder="Sua senha"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="block w-full min-w-0 bg-transparent text-sm text-slate-800 outline-none placeholder:text-slate-400"
+                      style={inputStyle}
                     />
                   </div>
                 </label>
 
                 {error ? (
-                  <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+                  <div style={{ borderRadius: "18px", border: "1px solid #fecaca", background: "#fef2f2", padding: "12px 16px", fontSize: "14px", fontWeight: 600, color: "#b91c1c" }}>
                     {error}
                   </div>
                 ) : null}
@@ -136,16 +309,16 @@ export default function LoginPageClient() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[linear-gradient(135deg,#2563eb,#1d4ed8)] px-4 py-3.5 text-sm font-bold text-white shadow-[0_18px_30px_rgba(37,99,235,0.24)] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
+                  style={primaryButtonStyle}
                 >
                   {loading ? "Entrando..." : "Entrar"}
                   {loading ? null : <ArrowRight size={16} />}
                 </button>
               </form>
 
-              <div className="mt-6 rounded-2xl border border-[rgba(37,99,235,0.12)] bg-[rgba(255,255,255,0.72)] px-4 py-4 text-sm text-slate-600">
-                <p className="font-semibold text-slate-800">Acesso protegido por perfil</p>
-                <p className="mt-1 leading-6">
+              <div style={{ marginTop: "24px", borderRadius: "18px", border: "1px solid rgba(37,99,235,0.12)", background: "rgba(255,255,255,0.72)", padding: "16px", fontSize: "14px", color: "#475569" }}>
+                <p style={{ margin: 0, fontWeight: 600, color: "#0f172a" }}>Acesso protegido por perfil</p>
+                <p style={{ marginTop: "4px", lineHeight: 1.7 }}>
                   O sistema direciona automaticamente cada usuário para a área correta após o login.
                 </p>
               </div>
@@ -167,14 +340,14 @@ function FeatureItem({
   description: string;
 }) {
   return (
-    <div className="rounded-[1.6rem] border border-white/16 bg-white/10 px-5 py-4 backdrop-blur-sm">
-      <div className="flex items-start gap-3">
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/14 text-white">
+    <div style={{ borderRadius: "26px", border: "1px solid rgba(255,255,255,0.16)", background: "rgba(255,255,255,0.1)", padding: "16px 20px", backdropFilter: "blur(8px)" }}>
+      <div style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
+        <div style={{ display: "flex", width: "44px", height: "44px", flexShrink: 0, alignItems: "center", justifyContent: "center", borderRadius: "18px", background: "rgba(255,255,255,0.14)", color: "#fff" }}>
           <Icon size={18} />
         </div>
         <div>
-          <p className="text-sm font-bold text-white">{title}</p>
-          <p className="mt-1 text-sm leading-6 text-white/72">{description}</p>
+          <p style={{ margin: 0, fontSize: "14px", fontWeight: 700, color: "#fff" }}>{title}</p>
+          <p style={{ marginTop: "4px", fontSize: "14px", lineHeight: 1.7, color: "rgba(255,255,255,0.72)" }}>{description}</p>
         </div>
       </div>
     </div>
