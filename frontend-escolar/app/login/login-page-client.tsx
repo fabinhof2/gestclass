@@ -6,7 +6,11 @@ import { ArrowRight, KeyRound, ShieldCheck, UserRound } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth-context";
 
-export default function LoginPageClient() {
+export default function LoginPageClient({
+  preferCompactLayout = false,
+}: {
+  preferCompactLayout?: boolean;
+}) {
   const { login } = useAuth();
   const router = useRouter();
 
@@ -53,9 +57,9 @@ export default function LoginPageClient() {
     position: "relative",
     margin: "0 auto",
     maxWidth: "1100px",
-    minHeight: "calc(100vh - 48px)",
+    minHeight: preferCompactLayout ? "auto" : "calc(100vh - 48px)",
     display: "flex",
-    alignItems: "center",
+    alignItems: preferCompactLayout ? "stretch" : "center",
     justifyContent: "center",
   };
 
@@ -63,9 +67,11 @@ export default function LoginPageClient() {
     width: "100%",
     maxWidth: "980px",
     display: "grid",
-    gridTemplateColumns: "minmax(0, 1.1fr) minmax(320px, 420px)",
+    gridTemplateColumns: preferCompactLayout
+      ? "minmax(0, 1fr)"
+      : "minmax(0, 1.1fr) minmax(320px, 420px)",
     overflow: "hidden",
-    borderRadius: "32px",
+    borderRadius: preferCompactLayout ? "24px" : "32px",
     border: "1px solid rgba(255,255,255,0.5)",
     background: "rgba(255, 252, 247, 0.82)",
     boxShadow: "0 24px 70px rgba(73,92,111,0.14)",
@@ -73,7 +79,7 @@ export default function LoginPageClient() {
   };
 
   const heroStyle: React.CSSProperties = {
-    display: "flex",
+    display: preferCompactLayout ? "none" : "flex",
     flexDirection: "column",
     justifyContent: "space-between",
     padding: "40px 32px",
@@ -83,7 +89,7 @@ export default function LoginPageClient() {
   };
 
   const formWrapStyle: React.CSSProperties = {
-    padding: "40px",
+    padding: preferCompactLayout ? "28px 20px" : "40px",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -238,7 +244,21 @@ export default function LoginPageClient() {
 
       <div className="login-shell" style={shellStyle}>
         <div className="login-card" style={{ ...cardStyle, gridTemplateColumns: undefined }}>
-          <section className="login-hero" style={{ ...heroStyle, display: undefined, flexDirection: undefined, justifyContent: undefined, padding: undefined, background: undefined }}>
+          <section
+            className="login-hero"
+            style={
+              preferCompactLayout
+                ? heroStyle
+                : {
+                    ...heroStyle,
+                    display: undefined,
+                    flexDirection: undefined,
+                    justifyContent: undefined,
+                    padding: undefined,
+                    background: undefined,
+                  }
+            }
+          >
             <div>
               <div
                 style={{
@@ -298,20 +318,33 @@ export default function LoginPageClient() {
             </div>
           </section>
 
-          <section className="login-form-wrap" style={{ ...formWrapStyle, padding: undefined, display: undefined, flexDirection: undefined, justifyContent: undefined }}>
+          <section
+            className="login-form-wrap"
+            style={
+              preferCompactLayout
+                ? formWrapStyle
+                : {
+                    ...formWrapStyle,
+                    padding: undefined,
+                    display: undefined,
+                    flexDirection: undefined,
+                    justifyContent: undefined,
+                  }
+            }
+          >
             <div style={{ margin: "0 auto", display: "flex", width: "100%", maxWidth: "420px", flexDirection: "column" }}>
               <div>
                 <div
                   style={{
                     display: "flex",
-                    width: "64px",
-                    height: "64px",
+                    width: preferCompactLayout ? "56px" : "64px",
+                    height: preferCompactLayout ? "56px" : "64px",
                     alignItems: "center",
                     justifyContent: "center",
-                    borderRadius: "22px",
+                    borderRadius: preferCompactLayout ? "18px" : "22px",
                     background: "linear-gradient(135deg,#2563eb,#60a5fa)",
                     color: "#fff",
-                    fontSize: "20px",
+                    fontSize: preferCompactLayout ? "18px" : "20px",
                     fontWeight: 900,
                     boxShadow: "0 18px 32px rgba(37,99,235,0.28)",
                   }}
@@ -322,7 +355,23 @@ export default function LoginPageClient() {
                 <p style={{ marginTop: "20px", fontSize: "12px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.28em", color: "#2f6c67" }}>
                   GestClass
                 </p>
-                <h2 className="login-title">
+                <h2
+                  className="login-title"
+                  style={
+                    preferCompactLayout
+                      ? {
+                          marginTop: "8px",
+                          marginBottom: 0,
+                          fontFamily: 'Georgia, "Times New Roman", serif',
+                          fontSize: "34px",
+                          fontWeight: 700,
+                          letterSpacing: "-0.04em",
+                          color: "#0f172a",
+                          lineHeight: 1,
+                        }
+                      : undefined
+                  }
+                >
                   Entrar na plataforma
                 </h2>
                 <p style={{ marginTop: "12px", fontSize: "14px", lineHeight: 1.7, color: "#64748b" }}>
