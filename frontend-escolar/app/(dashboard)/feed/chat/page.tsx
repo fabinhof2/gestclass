@@ -554,6 +554,52 @@ export default function ChatPage() {
       ) || communicationBackgroundOptions[0],
     [communicationBackgroundId],
   );
+  const communicationBackgroundStyle = useMemo(() => {
+    switch (communicationBackgroundId) {
+      case "white":
+        return {
+          backgroundColor: "#ffffff",
+          backgroundImage: "none",
+          backgroundSize: undefined,
+        };
+      case "yellow":
+        return {
+          backgroundColor: "#fef9c3",
+          backgroundImage:
+            "radial-gradient(circle at 24px 24px, rgba(202,138,4,0.12) 2px, transparent 0), radial-gradient(circle at 72px 72px, rgba(202,138,4,0.1) 2px, transparent 0)",
+          backgroundSize: "96px 96px",
+        };
+      case "gray":
+        return {
+          backgroundColor: "#e5e7eb",
+          backgroundImage:
+            "linear-gradient(45deg, rgba(148,163,184,0.12) 25%, transparent 25%, transparent 50%, rgba(148,163,184,0.12) 50%, rgba(148,163,184,0.12) 75%, transparent 75%, transparent)",
+          backgroundSize: "32px 32px",
+        };
+      case "blue":
+        return {
+          backgroundColor: "#dbeafe",
+          backgroundImage:
+            "radial-gradient(circle at 25px 25px, rgba(59,130,246,0.14) 2px, transparent 0), radial-gradient(circle at 75px 75px, rgba(96,165,250,0.12) 2px, transparent 0)",
+          backgroundSize: "100px 100px",
+        };
+      case "mint":
+        return {
+          backgroundColor: "#dcfce7",
+          backgroundImage:
+            "radial-gradient(circle at 24px 24px, rgba(16,185,129,0.12) 2px, transparent 0), radial-gradient(circle at 72px 72px, rgba(5,150,105,0.1) 2px, transparent 0)",
+          backgroundSize: "96px 96px",
+        };
+      case "black":
+      default:
+        return {
+          backgroundColor: "#020617",
+          backgroundImage:
+            "radial-gradient(circle at 25px 25px, rgba(255,255,255,0.08) 2px, transparent 0), radial-gradient(circle at 75px 75px, rgba(148,163,184,0.08) 2px, transparent 0)",
+          backgroundSize: "100px 100px",
+        };
+    }
+  }, [communicationBackgroundId]);
   const isGestao =
     user?.role === "ADMIN_ESCOLA" ||
     user?.role === "GESTOR" ||
@@ -1401,9 +1447,9 @@ function getConversationSubtitle(grupo: Grupo) {
         </aside>
 
         <div
-          className={`${mobileConversationOpen ? "flex" : "hidden xl:flex"} min-h-0 flex-col overflow-hidden bg-[#efeae2]`}
+          className={`${mobileConversationOpen ? "flex" : "hidden xl:flex"} min-h-0 flex-col overflow-hidden ${communicationTheme.chatPanelClass}`}
         >
-          <div className="shrink-0 flex items-center justify-between gap-3 border-b border-[#d1d7db] bg-[#f0f2f5] px-5 py-3">
+          <div className={`shrink-0 flex items-center justify-between gap-3 border-b px-5 py-3 ${communicationTheme.chatHeaderClass}`}>
             <div className="min-w-0">
               <div className="flex items-center gap-2">
                 <button
@@ -1460,7 +1506,7 @@ function getConversationSubtitle(grupo: Grupo) {
             </div>
           </div>
 
-          <div className="shrink-0 border-b border-[#d1d7db] bg-[#f0f2f5] p-3">
+          <div className={`shrink-0 border-b p-3 ${communicationTheme.chatComposerClass}`}>
             <div className="flex flex-wrap items-center gap-2">
               <span className="mr-1 text-xs font-bold text-slate-700">
                 Fundo
@@ -1530,7 +1576,7 @@ function getConversationSubtitle(grupo: Grupo) {
             </div>
           ) : null}
 
-          <form onSubmit={handleSend} className="order-2 shrink-0 border-t border-[#d1d7db] bg-[#f0f2f5] px-3 py-3 sm:px-4">
+          <form onSubmit={handleSend} className={`order-2 shrink-0 border-t px-3 py-3 sm:px-4 ${communicationTheme.chatComposerClass}`}>
             {showPicker ? (
               <div className="mb-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
                 <div className="mb-3 flex gap-2">
@@ -1763,7 +1809,7 @@ function getConversationSubtitle(grupo: Grupo) {
                 placeholder="Digite uma mensagem"
                 disabled={conversaSomenteLeitura}
                 rows={1}
-                className="order-1 max-h-28 min-h-[3.5rem] basis-full resize-none overflow-y-auto rounded-[1.8rem] border border-transparent bg-white px-5 pb-2 pt-5 text-base leading-6 text-slate-800 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/20 disabled:opacity-60"
+                className={`order-1 max-h-28 min-h-[3.5rem] basis-full resize-none overflow-y-auto rounded-[1.8rem] border px-5 pb-2 pt-5 text-base leading-6 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/20 disabled:opacity-60 ${communicationTheme.chatInputClass}`}
               />
               {texto.trim() || file ? (
                 <button
@@ -1798,13 +1844,8 @@ function getConversationSubtitle(grupo: Grupo) {
 
           <div
             ref={messagesContainerRef}
-            className="order-1 min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-5 sm:px-8"
-            style={{
-              backgroundColor: "#efeae2",
-              backgroundImage:
-                "radial-gradient(circle at 25px 25px, rgba(189,173,153,0.12) 2px, transparent 0), radial-gradient(circle at 75px 75px, rgba(189,173,153,0.1) 2px, transparent 0)",
-              backgroundSize: "100px 100px",
-            }}
+            className={`order-1 min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-5 sm:px-8 ${communicationTheme.chatMessagesClass}`}
+            style={communicationBackgroundStyle}
           >
             {mensagens.length === 0 ? (
               <div className="flex h-full items-center justify-center text-sm text-slate-500">
@@ -1828,10 +1869,10 @@ function getConversationSubtitle(grupo: Grupo) {
                       } ${
                         isFloatingMessage
                           ? `bg-transparent p-0 ${communicationTheme.floatingTextClass} shadow-none`
-                          : `rounded-2xl px-4 py-3 ${
+                              : `rounded-2xl px-4 py-3 ${
                               isMine
                                 ? "rounded-br-md bg-[#d9fdd3] text-slate-900 shadow-sm"
-                                : "rounded-bl-md bg-white text-slate-900 shadow-sm"
+                                : `${communicationTheme.otherBubbleClass} shadow-sm`
                             }`
                       }`}
                     >
