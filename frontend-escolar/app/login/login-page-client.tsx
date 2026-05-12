@@ -1,7 +1,7 @@
 "use client";
 
 import type { FormEvent } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowRight, KeyRound, ShieldCheck, UserRound } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth-context";
@@ -18,6 +18,22 @@ export default function LoginPageClient({
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [isCompactViewport, setIsCompactViewport] = useState(preferCompactLayout);
+
+  useEffect(() => {
+    const updateViewportMode = () => {
+      if (typeof window === "undefined") return;
+
+      setIsCompactViewport(window.innerWidth <= 767);
+    };
+
+    updateViewportMode();
+    window.addEventListener("resize", updateViewportMode);
+
+    return () => window.removeEventListener("resize", updateViewportMode);
+  }, []);
+
+  const compactLayout = preferCompactLayout || isCompactViewport;
 
   async function handleLogin(event?: FormEvent<HTMLFormElement>) {
     event?.preventDefault();
@@ -57,9 +73,9 @@ export default function LoginPageClient({
     position: "relative",
     margin: "0 auto",
     maxWidth: "1100px",
-    minHeight: preferCompactLayout ? "auto" : "calc(100vh - 48px)",
+    minHeight: compactLayout ? "auto" : "calc(100vh - 48px)",
     display: "flex",
-    alignItems: preferCompactLayout ? "stretch" : "center",
+    alignItems: compactLayout ? "stretch" : "center",
     justifyContent: "center",
   };
 
@@ -67,11 +83,11 @@ export default function LoginPageClient({
     width: "100%",
     maxWidth: "980px",
     display: "grid",
-    gridTemplateColumns: preferCompactLayout
+    gridTemplateColumns: compactLayout
       ? "minmax(0, 1fr)"
       : "minmax(0, 1.1fr) minmax(320px, 420px)",
     overflow: "hidden",
-    borderRadius: preferCompactLayout ? "24px" : "32px",
+    borderRadius: compactLayout ? "24px" : "32px",
     border: "1px solid rgba(255,255,255,0.5)",
     background: "rgba(255, 252, 247, 0.82)",
     boxShadow: "0 24px 70px rgba(73,92,111,0.14)",
@@ -79,7 +95,7 @@ export default function LoginPageClient({
   };
 
   const heroStyle: React.CSSProperties = {
-    display: preferCompactLayout ? "none" : "flex",
+    display: compactLayout ? "none" : "flex",
     flexDirection: "column",
     justifyContent: "space-between",
     padding: "40px 32px",
@@ -89,7 +105,7 @@ export default function LoginPageClient({
   };
 
   const formWrapStyle: React.CSSProperties = {
-    padding: preferCompactLayout ? "28px 20px" : "40px",
+    padding: compactLayout ? "28px 20px" : "40px",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -247,7 +263,7 @@ export default function LoginPageClient({
           <section
             className="login-hero"
             style={
-              preferCompactLayout
+              compactLayout
                 ? heroStyle
                 : {
                     ...heroStyle,
@@ -321,7 +337,7 @@ export default function LoginPageClient({
           <section
             className="login-form-wrap"
             style={
-              preferCompactLayout
+              compactLayout
                 ? formWrapStyle
                 : {
                     ...formWrapStyle,
@@ -337,14 +353,14 @@ export default function LoginPageClient({
                 <div
                   style={{
                     display: "flex",
-                    width: preferCompactLayout ? "56px" : "64px",
-                    height: preferCompactLayout ? "56px" : "64px",
+                    width: compactLayout ? "56px" : "64px",
+                    height: compactLayout ? "56px" : "64px",
                     alignItems: "center",
                     justifyContent: "center",
-                    borderRadius: preferCompactLayout ? "18px" : "22px",
+                    borderRadius: compactLayout ? "18px" : "22px",
                     background: "linear-gradient(135deg,#2563eb,#60a5fa)",
                     color: "#fff",
-                    fontSize: preferCompactLayout ? "18px" : "20px",
+                    fontSize: compactLayout ? "18px" : "20px",
                     fontWeight: 900,
                     boxShadow: "0 18px 32px rgba(37,99,235,0.28)",
                   }}
@@ -358,7 +374,7 @@ export default function LoginPageClient({
                 <h2
                   className="login-title"
                   style={
-                    preferCompactLayout
+                    compactLayout
                       ? {
                           marginTop: "8px",
                           marginBottom: 0,
